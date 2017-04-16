@@ -101,30 +101,7 @@
         for (unsigned long k = 0; k < shape.num_parts(); k++)
 		{
             dlib::point p = shape.part(k);
-			if (k == 16)
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(255, 0, 0));
-			}
-			else if (k == 17)
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(255, 255, 255));
-			}
-			else if (k == 21)
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 0));
-			}
-			else if (k == 25)
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 0, 255));
-			}
-			else if (k == 29)
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(255, 255, 0));
-			}
-			else
-			{
-				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
-			}
+			draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
         }
     }
     

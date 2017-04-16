@@ -11,13 +11,17 @@ import AVFoundation
 
 class ViewController: UIViewController
 {
+	@IBOutlet weak var rightEdge: UITextField!
+	@IBOutlet weak var leftEdge: UITextField!
 	
     let sessionHandler = SessionHandler()
-    
+	
     @IBOutlet weak var preview: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+		rightEdge.layer.zPosition = 5;
+		leftEdge.layer.zPosition = 5;
         // Do any additional setup after loading the view, typically from a nib.
     }
 
