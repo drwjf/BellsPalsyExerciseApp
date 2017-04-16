@@ -9,19 +9,28 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
 	@IBOutlet weak var rightEdge: UITextField!
 	@IBOutlet weak var leftEdge: UITextField!
 	
-    let sessionHandler = SessionHandler()
+	var session = AVCaptureSession()
+	var output = AVCaptureVideoDataOutput()
+	let layer = AVSampleBufferDisplayLayer()
+	let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
+	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
+	let wrapper = DlibWrapper()
+	
+	var currentMetadata: [AnyObject] = []
 	
     @IBOutlet weak var preview: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-		rightEdge.layer.zPosition = 5;
-		leftEdge.layer.zPosition = 5;
+		rightEdge.layer.zPosition = 5
+		leftEdge.layer.zPosition = 5
+		rightEdge.backgroundColor = UIColor.clear
+		leftEdge.backgroundColor = UIColor.clear
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -33,8 +42,8 @@ class ViewController: UIViewController
     override func viewDidAppear(_ animated: Bool)
 	{
         super.viewDidAppear(animated)
-        sessionHandler.openSession()
-		self.preview.layer.addSublayer(self.sessionHandler.layer)
+        openSession()
+		self.preview.layer.addSublayer(layer)
 	}
 	
 	override func viewDidLayoutSubviews()
@@ -44,7 +53,7 @@ class ViewController: UIViewController
 	}
 	
 	func updateVideoOrientation () {
-		if let connection =  self.sessionHandler.output.connection(withMediaType: AVMediaTypeVideo)  {
+		if let connection = output.connection(withMediaType: AVMediaTypeVideo)  {
 			if (connection.isVideoOrientationSupported) {
 				switch (UIDevice.current.orientation) {
 					case .portrait:
@@ -65,12 +74,91 @@ class ViewController: UIViewController
 					}
 				}
 			}
-		sessionHandler.layer.frame = self.preview.bounds
+		layer.frame = self.preview.bounds
 	}
 
 	override var prefersStatusBarHidden: Bool
 	{
 		return true
 	}
+	
+	func openSession()
+	{
+		let device = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
+			.map { $0 as! AVCaptureDevice }
+			.filter { $0.position == .front}
+			.first!
+		
+		let input = try! AVCaptureDeviceInput(device: device)
+		
+		output.setSampleBufferDelegate(self, queue: sampleQueue)
+		
+		let metaOutput = AVCaptureMetadataOutput()
+		metaOutput.setMetadataObjectsDelegate(self, queue: faceQueue)
+		
+		session.beginConfiguration()
+		
+		if session.canAddInput(input) {
+			session.addInput(input)
+		}
+		if session.canAddOutput(output) {
+			session.addOutput(output)
+		}
+		if session.canAddOutput(metaOutput) {
+			session.addOutput(metaOutput)
+		}
+		
+		session.commitConfiguration()
+		
+		let settings: [AnyHashable: Any] = [kCVPixelBufferPixelFormatTypeKey as AnyHashable: Int(kCVPixelFormatType_32BGRA)]
+		output.videoSettings = settings
+		
+		// availableMetadataObjectTypes change when output is added to session.
+		// before it is added, availableMetadataObjectTypes is empty
+		metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+		
+		wrapper?.prepare()
+		
+		session.startRunning()
+	}
+	
+	// MARK: AVCaptureVideoDataOutputSampleBufferDelegate
+	func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
+	{
+		connection.videoOrientation = AVCaptureVideoOrientation.portrait
+		connection.isVideoMirrored = true
+		
+		if !currentMetadata.isEmpty
+		{
+			let boundsArray = currentMetadata
+				.flatMap { $0 as? AVMetadataFaceObject }
+				.map { (faceObject) -> NSValue in
+					let convertedObject = captureOutput.transformedMetadataObject(for: faceObject, connection: connection)
+					return NSValue(cgRect: convertedObject!.bounds)
+			}
+			
+			let points = wrapper?.doWork(on: sampleBuffer, inRects: boundsArray) as! [NSArray]
+			let leftCorner = points[48] as! [NSNumber]
+			DispatchQueue.main.async
+			{
+				self.leftEdge.text = leftCorner[0].stringValue
+			}
+		}
+		
+		layer.enqueue(sampleBuffer)
+	}
+	
+	func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!)
+	{
+		print("DidDropSampleBuffer")
+	}
+	
+	// MARK: AVCaptureMetadataOutputObjectsDelegate
+	
+	func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!)
+	{
+		currentMetadata = metadataObjects as [AnyObject]
+	}
+
 }
 

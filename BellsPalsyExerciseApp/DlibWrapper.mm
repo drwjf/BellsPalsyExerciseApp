@@ -42,9 +42,8 @@
     self.prepared = YES;
 }
 
-- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects
+- (NSArray*)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects
 {
-    
     if (!self.prepared) {
         [self prepare];
     }
@@ -88,7 +87,9 @@
     
     // convert the face bounds list to dlib format
     std::vector<dlib::rectangle> convertedRectangles = [DlibWrapper convertCGRectValueArray:rects];
-    
+	
+	NSMutableArray *points = [[NSMutableArray alloc] init];
+	
     // for every detected face
     for (unsigned long j = 0; j < convertedRectangles.size(); ++j)
     {
@@ -101,7 +102,22 @@
         for (unsigned long k = 0; k < shape.num_parts(); k++)
 		{
             dlib::point p = shape.part(k);
-			draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
+			NSNumber *x = [[NSNumber alloc] initWithLong:p.x()];
+			NSNumber *y = [[NSNumber alloc] initWithLong:p.y()];
+			NSArray *point = [[NSArray alloc] initWithObjects:x,y, nil];
+			[points addObject:point];
+			if (k == 48 || k == 60)
+			{
+				draw_solid_circle(img, p, 3, dlib::rgb_pixel(255, 0, 0));
+			}
+			else if (k == 54 || k == 64)
+			{
+				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 0));
+			}
+			else
+			{
+				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
+			}
         }
     }
     
@@ -125,6 +141,7 @@
         position++;
     }
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+	return points;
 }
 
 + (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects

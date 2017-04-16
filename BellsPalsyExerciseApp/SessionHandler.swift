@@ -79,7 +79,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
                     return NSValue(cgRect: convertedObject!.bounds)
             }
             
-            wrapper?.doWork(on: sampleBuffer, inRects: boundsArray)
+            let points = wrapper?.doWork(on: sampleBuffer, inRects: boundsArray) as! [NSArray]
+			let leftCorner = points[48] as! [NSArray];
         }
 		
         layer.enqueue(sampleBuffer)
