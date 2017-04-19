@@ -22,6 +22,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
 	let wrapper = DlibWrapper()
 	
+	var count:Double = 0;
+	var standardDeviation:Double = 0.0
+	var sum:Double = 0.0
+	var average:Double = 0.0
+	var mouthData = [Double]()
+	let frameCount = 15
+	
 	var currentMetadata: [AnyObject] = []
 	
     @IBOutlet weak var preview: UIView!
@@ -147,18 +154,51 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 			let center = points[62] as! [NSNumber]
 			let leftOffset = abs(center[0].intValue - leftCorner[0].intValue)
 			let rightOffset = abs(center[0].intValue - rightCorner[0].intValue)
-			let difference = abs(leftOffset - rightOffset)
+			let difference:Double = abs(Double(leftOffset - rightOffset))
 			DispatchQueue.main.async
 			{
-				self.leftEdge.text = String(leftOffset)
-				self.rightEdge.text = String(rightOffset)
-				if (difference > 10)
+				if (self.count < Double(self.frameCount))
 				{
-					self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(difference)/CGFloat(50))
+					self.mouthData.append(difference)
+					self.sum += difference
+					self.count += 1
 				}
 				else
 				{
-					self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
+					// filtering -----------
+					
+					for data in self.mouthData
+					{
+						self.average += data
+					}
+					self.average /= Double(self.mouthData.count)
+					for data in self.mouthData
+					{
+						self.standardDeviation += (data - self.average) * (data - self.average)
+					}
+					self.standardDeviation = sqrt(self.standardDeviation / Double(self.mouthData.count))
+					
+					for index in 0...(self.frameCount-1)
+					{
+						if (abs(self.mouthData[index]) > self.standardDeviation + abs(self.average))
+						{
+							self.sum -= self.mouthData[index]
+							self.count -= 1
+						}
+					}
+					
+					let filteredData = self.sum / self.count
+					
+					// ---------------------
+					
+					self.mouthData.removeAll()
+					self.standardDeviation = 0
+					self.sum = 0
+					self.average = 0
+					self.count = 0
+					self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(50))
+					self.leftEdge.text = String(filteredData)
+					self.rightEdge.text = String(rightOffset)
 				}
 			}
 		}
