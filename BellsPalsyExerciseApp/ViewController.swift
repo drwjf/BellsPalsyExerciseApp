@@ -1,9 +1,9 @@
 //
 //  ViewController.swift
-//  DisplayLiveSamples
+//  BellsPalsyExerciseApp
 //
-//  Created by Luis Reisewitz on 15.05.16.
-//  Copyright © 2016 ZweiGraf. All rights reserved.
+//  Created by Kutlay Hanli on 23/02/2017.
+//  Copyright © 2017 ku.khanli. All rights reserved.
 //
 
 import UIKit
@@ -35,9 +35,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-		rightEdge.layer.zPosition = 5
-		leftEdge.layer.zPosition = 5
-		transparentView.layer.zPosition = 5
+		rightEdge.layer.zPosition = 2
+		leftEdge.layer.zPosition = -5
+		transparentView.layer.zPosition = 1
 		rightEdge.backgroundColor = UIColor.clear
 		leftEdge.backgroundColor = UIColor.clear
 		transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.0)
@@ -198,7 +198,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 					self.count = 0
 					self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(50))
 					self.leftEdge.text = String(filteredData)
-					self.rightEdge.text = String(rightOffset)
+					self.rightEdge.text = String(filteredData)
 				}
 			}
 		}
