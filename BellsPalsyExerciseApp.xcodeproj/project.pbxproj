@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A09962EDA9DEC2747023285 /* Pods_BellsPalsyExerciseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFDFE3CC0506C6A653CBBB4 /* Pods_BellsPalsyExerciseApp.framework */; };
 		A56695F01CE8B34B00BD7EAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */; };
 		A56695F21CE8B34B00BD7EAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56695F11CE8B34B00BD7EAF /* ViewController.swift */; };
 		A56695F51CE8B34B00BD7EAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A56695F31CE8B34B00BD7EAF /* Main.storyboard */; };
@@ -15,11 +16,17 @@
 		A5A1B2D21CEA317B00626AC5 /* DlibWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */; };
 		A5A1B2D41CEA35B300626AC5 /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 		A5A1B2D61CEA41E200626AC5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */; };
+		CC2118E31EBBA6AA00EFF126 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = CC2118E21EBBA6AA00EFF126 /* Podfile */; };
+		CC2118E51EBBA94C00EFF126 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */; };
+		CC2118E71EBBA9F900EFF126 /* MenuViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */; };
+		CC2118E91EBBAB8E00EFF126 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E81EBBAB8E00EFF126 /* Exercise.swift */; };
 		CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 		CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08B28EC01B1921FE7D439285 /* Pods-BellsPalsyExerciseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BellsPalsyExerciseApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp.debug.xcconfig"; sourceTree = "<group>"; };
+		4EFDFE3CC0506C6A653CBBB4 /* Pods_BellsPalsyExerciseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BellsPalsyExerciseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56695EC1CE8B34B00BD7EAF /* DisplayLiveSamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = DisplayLiveSamples.app; path = BellsPalsyExerciseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A56695F11CE8B34B00BD7EAF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,6 +40,11 @@
 		A5A1B2D31CEA35B300626AC5 /* libdlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdlib.a; path = BellsPalsyExerciseApp/lib/libdlib.a; sourceTree = "<group>"; };
 		A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = shape_predictor_68_face_landmarks.dat; path = BellsPalsyExerciseApp/lib/shape_predictor_68_face_landmarks.dat; sourceTree = "<group>"; };
+		CC2118E21EBBA6AA00EFF126 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewCell.swift; sourceTree = "<group>"; };
+		CC2118E81EBBAB8E00EFF126 /* Exercise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		E4E27AC4527B2CA831029ED9 /* Pods-BellsPalsyExerciseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BellsPalsyExerciseApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,19 +54,32 @@
 			files = (
 				A5A1B2D61CEA41E200626AC5 /* Accelerate.framework in Frameworks */,
 				A5A1B2D41CEA35B300626AC5 /* libdlib.a in Frameworks */,
+				9A09962EDA9DEC2747023285 /* Pods_BellsPalsyExerciseApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3BB5723EFACC8A75A99F4C8D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				08B28EC01B1921FE7D439285 /* Pods-BellsPalsyExerciseApp.debug.xcconfig */,
+				E4E27AC4527B2CA831029ED9 /* Pods-BellsPalsyExerciseApp.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		A56695E31CE8B34B00BD7EAF = {
 			isa = PBXGroup;
 			children = (
+				CC2118E21EBBA6AA00EFF126 /* Podfile */,
 				CCC269F61EA3989C008B3159 /* Dlib */,
 				A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */,
 				A56695EE1CE8B34B00BD7EAF /* BellsPalsyExerciseApp */,
 				A56695ED1CE8B34B00BD7EAF /* Products */,
+				3BB5723EFACC8A75A99F4C8D /* Pods */,
+				F9E2E130EC63CD121067EFFE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,7 +98,10 @@
 				A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */,
 				A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */,
 				A56695F11CE8B34B00BD7EAF /* ViewController.swift */,
+				CC2118E81EBBAB8E00EFF126 /* Exercise.swift */,
 				A56695F31CE8B34B00BD7EAF /* Main.storyboard */,
+				CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */,
+				CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */,
 				A56695F61CE8B34B00BD7EAF /* Assets.xcassets */,
 				A56695F81CE8B34B00BD7EAF /* LaunchScreen.storyboard */,
 				A56695FB1CE8B34B00BD7EAF /* Info.plist */,
@@ -91,6 +119,14 @@
 			name = Dlib;
 			sourceTree = "<group>";
 		};
+		F9E2E130EC63CD121067EFFE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4EFDFE3CC0506C6A653CBBB4 /* Pods_BellsPalsyExerciseApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -98,9 +134,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A56696141CE8B34B00BD7EAF /* Build configuration list for PBXNativeTarget "BellsPalsyExerciseApp" */;
 			buildPhases = (
+				B83A51368054852C1413ECD4 /* [CP] Check Pods Manifest.lock */,
 				A56695E81CE8B34B00BD7EAF /* Sources */,
 				A56695E91CE8B34B00BD7EAF /* Frameworks */,
 				A56695EA1CE8B34B00BD7EAF /* Resources */,
+				88CD64A55C794756E3ED4FFD /* [CP] Embed Pods Frameworks */,
+				52F915BEEF73F4D3229207E5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -151,6 +190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC2118E31EBBA6AA00EFF126 /* Podfile in Resources */,
 				CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */,
 				CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */,
 				A56695FA1CE8B34B00BD7EAF /* LaunchScreen.storyboard in Resources */,
@@ -161,14 +201,65 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		52F915BEEF73F4D3229207E5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88CD64A55C794756E3ED4FFD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B83A51368054852C1413ECD4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A56695E81CE8B34B00BD7EAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A5A1B2D21CEA317B00626AC5 /* DlibWrapper.mm in Sources */,
+				CC2118E71EBBA9F900EFF126 /* MenuViewCell.swift in Sources */,
 				A56695F21CE8B34B00BD7EAF /* ViewController.swift in Sources */,
 				A56695F01CE8B34B00BD7EAF /* AppDelegate.swift in Sources */,
+				CC2118E51EBBA94C00EFF126 /* MenuViewController.swift in Sources */,
+				CC2118E91EBBAB8E00EFF126 /* Exercise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +383,7 @@
 		};
 		A56696151CE8B34B00BD7EAF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 08B28EC01B1921FE7D439285 /* Pods-BellsPalsyExerciseApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -320,6 +412,7 @@
 		};
 		A56696161CE8B34B00BD7EAF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4E27AC4527B2CA831029ED9 /* Pods-BellsPalsyExerciseApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

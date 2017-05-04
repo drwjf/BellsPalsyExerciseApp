@@ -9,24 +9,21 @@
 import UIKit
 import AVFoundation
 
-enum Exercise:Int {case SMILING, BLINKING}
-enum Coloring:CGFloat {case SMILING = 50, BLINKING = 5}
+var currentExercise = 0
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
 	@IBOutlet weak var rightEdge: UITextField!
 	@IBOutlet weak var leftEdge: UITextField!
-	
 	@IBOutlet weak var transparentView: UIView!
+	
+	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
 	var session = AVCaptureSession()
 	var output = AVCaptureVideoDataOutput()
 	let layer = AVSampleBufferDisplayLayer()
 	let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
 	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
 	let wrapper = DlibWrapper()
-	
-	var currentExercise = Exercise.BLINKING
-	var currentColoring = Coloring.BLINKING
 	
 	var count:Double = 0;
 	var standardDeviation:Double = 0.0
@@ -42,7 +39,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
 		rightEdge.layer.zPosition = 2
-		leftEdge.layer.zPosition = -5
+		leftEdge.layer.zPosition = 2
 		transparentView.layer.zPosition = 1
 		rightEdge.backgroundColor = UIColor.clear
 		leftEdge.backgroundColor = UIColor.clear
@@ -157,7 +154,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 			let points = wrapper?.doWork(on: sampleBuffer, inRects: boundsArray) as! [NSArray]
 			var difference:Double = 0.0
 			
-			if (currentExercise == Exercise.SMILING)
+			if (currentExercise < 0)
+			{
+				let leftEyebrowInnerEdge = points[21] as! [NSNumber]
+				let rightEyebrowInnerEdge = points[22] as! [NSNumber]
+				let topNose = points[27] as! [NSNumber]
+				let leftOffset = abs(leftEyebrowInnerEdge[0].intValue - topNose[0].intValue)
+				let rightOffset = abs(rightEyebrowInnerEdge[0].intValue - topNose[0].intValue)
+				difference = abs(Double(leftOffset - rightOffset))
+			}
+			else if (currentExercise == 0)
 			{
 				let leftCorner = points[48] as! [NSNumber]
 				let rightCorner = points[54] as! [NSNumber]
@@ -167,7 +173,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				difference = abs(Double(leftOffset - rightOffset))
 				
 			}
-			else if (currentExercise == Exercise.BLINKING)
+			else if (currentExercise == 1)
 			{
 				// left eye
 				let leftEyeLeftUpperCorner = points[37] as! [NSNumber]
@@ -229,14 +235,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 						self.sum = 0
 						self.average = 0
 						self.count = 0
-						if (CGFloat(filteredData) > self.currentColoring.rawValue * 0.2)
+						if (CGFloat(filteredData) > self.exercises[currentExercise].threshold * 0.2)
 						{
-							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.currentColoring.rawValue))
+							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercises[currentExercise].threshold))
 						}
 						else
 						{
 							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
 						}
+						
 						self.leftEdge.text = String(filteredData)
 						self.rightEdge.text = String(filteredData)
 						
