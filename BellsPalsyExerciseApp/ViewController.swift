@@ -9,6 +9,9 @@
 import UIKit
 import AVFoundation
 
+enum Exercise:Int {case SMILING, BLINKING}
+enum Coloring:CGFloat {case SMILING = 50, BLINKING = 5}
+
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
 	@IBOutlet weak var rightEdge: UITextField!
@@ -22,11 +25,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
 	let wrapper = DlibWrapper()
 	
+	var currentExercise = Exercise.BLINKING
+	var currentColoring = Coloring.BLINKING
+	
 	var count:Double = 0;
 	var standardDeviation:Double = 0.0
 	var sum:Double = 0.0
 	var average:Double = 0.0
-	var mouthData = [Double]()
+	var dataPoints = [Double]()
 	let frameCount = 15
 	
 	var currentMetadata: [AnyObject] = []
@@ -149,57 +155,93 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 			}
 			
 			let points = wrapper?.doWork(on: sampleBuffer, inRects: boundsArray) as! [NSArray]
-			let leftCorner = points[48] as! [NSNumber]
-			let rightCorner = points[54] as! [NSNumber]
-			let center = points[62] as! [NSNumber]
-			let leftOffset = abs(center[0].intValue - leftCorner[0].intValue)
-			let rightOffset = abs(center[0].intValue - rightCorner[0].intValue)
-			let difference:Double = abs(Double(leftOffset - rightOffset))
-			DispatchQueue.main.async
+			var difference:Double = 0.0
+			
+			if (currentExercise == Exercise.SMILING)
 			{
-				if (self.count < Double(self.frameCount))
+				let leftCorner = points[48] as! [NSNumber]
+				let rightCorner = points[54] as! [NSNumber]
+				let center = points[62] as! [NSNumber]
+				let leftOffset = abs(center[0].intValue - leftCorner[0].intValue)
+				let rightOffset = abs(center[0].intValue - rightCorner[0].intValue)
+				difference = abs(Double(leftOffset - rightOffset))
+				
+			}
+			else if (currentExercise == Exercise.BLINKING)
+			{
+				// left eye
+				let leftEyeLeftUpperCorner = points[37] as! [NSNumber]
+				let leftEyeRightUpperCorner = points[38] as! [NSNumber]
+				let leftEyeLeftLowerCorner = points[41] as! [NSNumber]
+				let leftEyeRightLowerCorner = points[40] as! [NSNumber]
+				// right eye
+				let rightEyeLeftUpperCorner = points[43] as! [NSNumber]
+				let rightEyeRightUpperCorner = points[44] as! [NSNumber]
+				let rightEyeLeftLowerCorner = points[47] as! [NSNumber]
+				let rightEyeRightLowerCorner = points[46] as! [NSNumber]
+				
+				let leftEyeClosure = (abs(leftEyeLeftUpperCorner[1].doubleValue - leftEyeLeftLowerCorner[1].doubleValue) + abs(leftEyeRightUpperCorner[1].doubleValue - leftEyeRightLowerCorner[1].doubleValue)) / 2.0
+				
+				let rightEyeClosure = (abs(rightEyeLeftUpperCorner[1].doubleValue - rightEyeLeftLowerCorner[1].doubleValue) + abs(rightEyeRightUpperCorner[1].doubleValue - rightEyeRightLowerCorner[1].doubleValue)) / 2.0
+				
+				difference = abs(Double(leftEyeClosure - rightEyeClosure))
+			}
+			DispatchQueue.main.async
 				{
-					self.mouthData.append(difference)
-					self.sum += difference
-					self.count += 1
-				}
-				else
-				{
-					// filtering -----------
-					
-					for data in self.mouthData
+					// Smiling
+					if (self.count < Double(self.frameCount))
 					{
-						self.average += data
+						self.dataPoints.append(difference)
+						self.sum += difference
+						self.count += 1
 					}
-					self.average /= Double(self.mouthData.count)
-					for data in self.mouthData
+					else
 					{
-						self.standardDeviation += (data - self.average) * (data - self.average)
-					}
-					self.standardDeviation = sqrt(self.standardDeviation / Double(self.mouthData.count))
-					
-					for index in 0...(self.frameCount-1)
-					{
-						if (abs(self.mouthData[index]) > self.standardDeviation + abs(self.average))
+						// filtering -----------
+						
+						
+						for data in self.dataPoints
 						{
-							self.sum -= self.mouthData[index]
-							self.count -= 1
+							self.average += data
 						}
+						self.average /= Double(self.dataPoints.count)
+						for data in self.dataPoints
+						{
+							self.standardDeviation += (data - self.average) * (data - self.average)
+						}
+						self.standardDeviation = sqrt(self.standardDeviation / Double(self.dataPoints.count))
+						
+						for index in 0...(self.frameCount-1)
+						{
+							if (abs(self.dataPoints[index]) > self.standardDeviation + abs(self.average))
+							{
+								self.sum -= self.dataPoints[index]
+								self.count -= 1
+							}
+						}
+						
+						let filteredData = self.sum / self.count
+						
+						// ---------------------
+						
+						self.dataPoints.removeAll()
+						self.standardDeviation = 0
+						self.sum = 0
+						self.average = 0
+						self.count = 0
+						if (CGFloat(filteredData) > self.currentColoring.rawValue * 0.2)
+						{
+							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.currentColoring.rawValue))
+						}
+						else
+						{
+							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
+						}
+						self.leftEdge.text = String(filteredData)
+						self.rightEdge.text = String(filteredData)
+						
 					}
-					
-					let filteredData = self.sum / self.count
-					
-					// ---------------------
-					
-					self.mouthData.removeAll()
-					self.standardDeviation = 0
-					self.sum = 0
-					self.average = 0
-					self.count = 0
-					self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(50))
-					self.leftEdge.text = String(filteredData)
-					self.rightEdge.text = String(filteredData)
-				}
+					// Smiling End
 			}
 		}
 		
