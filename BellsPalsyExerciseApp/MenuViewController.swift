@@ -13,9 +13,13 @@ class MenuViewController: UITableViewController
 	
 	let exercises = ["Smiling","Blinking"]
 
+	@IBOutlet weak var navigationBar: UINavigationItem!
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		navigationBar.title = "Menu"
+		
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -32,14 +36,26 @@ class MenuViewController: UITableViewController
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	{
         // #warning Incomplete implementation, return the number of rows
         return exercises.count
     }
 
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+	{
+		if (section == 0)
+		{
+			return "Exercises"
+		}
+		else
+		{
+			return "Progress"
+		}
+	}
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "exerciseCell", for: indexPath) as! MenuViewCell
@@ -54,7 +70,14 @@ class MenuViewController: UITableViewController
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 	{
 		currentExercise = indexPath.row
-		performSegue(withIdentifier: "exerciseSegue", sender: self)
+		if (indexPath.section == 0)
+		{
+			performSegue(withIdentifier: "exerciseSegue", sender: self)
+		}
+		else
+		{
+			performSegue(withIdentifier: "progressSegue", sender: self)
+		}
 	}
 
     /*

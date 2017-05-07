@@ -11,11 +11,12 @@ import AVFoundation
 
 var currentExercise = 0
 
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
+class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
-	@IBOutlet weak var rightEdge: UITextField!
-	@IBOutlet weak var leftEdge: UITextField!
+	@IBOutlet weak var rightEdge: UILabel!
+	@IBOutlet weak var leftEdge: UILabel!
 	@IBOutlet weak var transparentView: UIView!
+	@IBOutlet weak var guide: UIImageView!
 	
 	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
 	var session = AVCaptureSession()
@@ -32,15 +33,80 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	var dataPoints = [Double]()
 	let frameCount = 15
 	
+	struct Stabilization
+	{
+		var leftEyeDataPoints = [CGPoint]()
+		var rightEyeDataPoints = [CGPoint]()
+		
+		func average(array: [CGPoint]) -> CGPoint
+		{
+			var result = CGPoint(x: 0, y: 0)
+			
+			for data in array
+			{
+				result = CGPoint(x: result.x + data.x, y: result.y + data.y)
+			}
+			
+			return CGPoint(x: result.x / CGFloat(array.count), y: result.y / CGFloat(array.count))
+		}
+		
+		func standardDeviaton(array: [CGPoint]) -> CGPoint
+		{
+			var temp = CGPoint(x: 0, y: 0)
+			let ave = self.average(array: array)
+			for data in array
+			{
+				temp = CGPoint(x: temp.x + pow(data.x - ave.x, 2), y: temp.y + pow(data.y - ave.y, 2))
+			}
+			return CGPoint(x: sqrt(temp.x / CGFloat(array.count)), y: sqrt(temp.y / CGFloat(array.count)))
+		}
+		
+		func AVTFiltering(array: [CGPoint]) -> CGPoint
+		{
+			let ave = self.average(array: array)
+			let sd = self.standardDeviaton(array: array)
+			var validDataCount = 0
+			var result = CGPoint(x: 0, y: 0)
+			for data in array
+			{
+				if (data.x > ave.x - sd.x && data.x < ave.x + sd.x && data.y > ave.y - sd.y && data.y < ave.y + sd.y)
+				{
+					result = CGPoint(x: result.x + data.x, y: result.y + data.y)
+					validDataCount += 1
+				}
+			}
+			return CGPoint(x: result.x / CGFloat(validDataCount), y: result.y / CGFloat(validDataCount))
+		}
+		
+		mutating func filter() -> [CGPoint] {
+			let result = [self.AVTFiltering(array: self.leftEyeDataPoints),self.AVTFiltering(array: self.rightEyeDataPoints)]
+			self.leftEyeDataPoints.removeAll()
+			self.rightEyeDataPoints.removeAll()
+			return result
+		}
+		
+		mutating func add(left: CGPoint, right: CGPoint)
+		{
+			self.leftEyeDataPoints.append(left)
+			self.rightEyeDataPoints.append(right)
+		}
+	}
+	
+	var stabilizer = Stabilization()
+	
 	var currentMetadata: [AnyObject] = []
 	
     @IBOutlet weak var preview: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		navigationItem.title = exercises[currentExercise].name
+		
 		rightEdge.layer.zPosition = 2
 		leftEdge.layer.zPosition = 2
 		transparentView.layer.zPosition = 1
+		guide.layer.zPosition = 2
 		rightEdge.backgroundColor = UIColor.clear
 		leftEdge.backgroundColor = UIColor.clear
 		transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.0)
@@ -190,65 +256,70 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				
 				let rightEyeClosure = (abs(rightEyeLeftUpperCorner[1].doubleValue - rightEyeLeftLowerCorner[1].doubleValue) + abs(rightEyeRightUpperCorner[1].doubleValue - rightEyeRightLowerCorner[1].doubleValue)) / 2.0
 				
+				stabilizer.add(left: CGPoint(x: (leftEyeLeftUpperCorner[0].cgFloatValue() + leftEyeRightUpperCorner[0].cgFloatValue() + leftEyeLeftLowerCorner[0].cgFloatValue() + leftEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (leftEyeLeftUpperCorner[1].cgFloatValue() + leftEyeRightUpperCorner[1].cgFloatValue() + leftEyeLeftLowerCorner[1].cgFloatValue() + leftEyeRightLowerCorner[1].cgFloatValue())/4.0), right: (CGPoint(x: (rightEyeLeftUpperCorner[0].cgFloatValue() + rightEyeRightUpperCorner[0].cgFloatValue() + rightEyeLeftLowerCorner[0].cgFloatValue() + rightEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (rightEyeLeftUpperCorner[1].cgFloatValue() + rightEyeRightUpperCorner[1].cgFloatValue() + rightEyeLeftLowerCorner[1].cgFloatValue() + rightEyeRightLowerCorner[1].cgFloatValue())/4.0)))
+				
 				difference = abs(Double(leftEyeClosure - rightEyeClosure))
 			}
-			DispatchQueue.main.async
+			// Smiling
+			if (self.count < Double(self.frameCount))
+			{
+				self.dataPoints.append(difference)
+				self.sum += difference
+				self.count += 1
+			}
+			else
+			{
+				// filtering -----------
+				
+				
+				for data in self.dataPoints
 				{
-					// Smiling
-					if (self.count < Double(self.frameCount))
+					self.average += data
+				}
+				self.average /= Double(self.dataPoints.count)
+				for data in self.dataPoints
+				{
+					self.standardDeviation += (data - self.average) * (data - self.average)
+				}
+				self.standardDeviation = sqrt(self.standardDeviation / Double(self.dataPoints.count))
+				
+				for index in 0...(self.frameCount-1)
+				{
+					if (abs(self.dataPoints[index]) > self.standardDeviation + abs(self.average))
 					{
-						self.dataPoints.append(difference)
-						self.sum += difference
-						self.count += 1
+						self.sum -= self.dataPoints[index]
+						self.count -= 1
+					}
+				}
+				
+				let filteredData = self.sum / self.count
+				
+				// ---------------------
+				
+				self.dataPoints.removeAll()
+				self.standardDeviation = 0
+				self.sum = 0
+				self.average = 0
+				self.count = 0
+				
+				let reference = stabilizer.filter()
+				
+				DispatchQueue.main.async
+				{
+					if (CGFloat(filteredData) > self.exercises[currentExercise].threshold * 0.2)
+					{
+						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercises[currentExercise].threshold))
 					}
 					else
 					{
-						// filtering -----------
-						
-						
-						for data in self.dataPoints
-						{
-							self.average += data
-						}
-						self.average /= Double(self.dataPoints.count)
-						for data in self.dataPoints
-						{
-							self.standardDeviation += (data - self.average) * (data - self.average)
-						}
-						self.standardDeviation = sqrt(self.standardDeviation / Double(self.dataPoints.count))
-						
-						for index in 0...(self.frameCount-1)
-						{
-							if (abs(self.dataPoints[index]) > self.standardDeviation + abs(self.average))
-							{
-								self.sum -= self.dataPoints[index]
-								self.count -= 1
-							}
-						}
-						
-						let filteredData = self.sum / self.count
-						
-						// ---------------------
-						
-						self.dataPoints.removeAll()
-						self.standardDeviation = 0
-						self.sum = 0
-						self.average = 0
-						self.count = 0
-						if (CGFloat(filteredData) > self.exercises[currentExercise].threshold * 0.2)
-						{
-							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercises[currentExercise].threshold))
-						}
-						else
-						{
-							self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
-						}
-						
-						self.leftEdge.text = String(filteredData)
-						self.rightEdge.text = String(filteredData)
-						
+						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
 					}
-					// Smiling End
+					
+					self.leftEdge.text = "x: \(reference[0].x)\ny\(reference[0].y)"
+					self.rightEdge.text = "x: \(reference[1].x)\ny\(reference[1].y)"
+					
+				}
+				// Smiling End
 			}
 		}
 		

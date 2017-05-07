@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		9A09962EDA9DEC2747023285 /* Pods_BellsPalsyExerciseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFDFE3CC0506C6A653CBBB4 /* Pods_BellsPalsyExerciseApp.framework */; };
 		A56695F01CE8B34B00BD7EAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */; };
-		A56695F21CE8B34B00BD7EAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56695F11CE8B34B00BD7EAF /* ViewController.swift */; };
+		A56695F21CE8B34B00BD7EAF /* ExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56695F11CE8B34B00BD7EAF /* ExerciseViewController.swift */; };
 		A56695F51CE8B34B00BD7EAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A56695F31CE8B34B00BD7EAF /* Main.storyboard */; };
 		A56695F71CE8B34B00BD7EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A56695F61CE8B34B00BD7EAF /* Assets.xcassets */; };
 		A56695FA1CE8B34B00BD7EAF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A56695F81CE8B34B00BD7EAF /* LaunchScreen.storyboard */; };
@@ -20,8 +20,11 @@
 		CC2118E51EBBA94C00EFF126 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */; };
 		CC2118E71EBBA9F900EFF126 /* MenuViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */; };
 		CC2118E91EBBAB8E00EFF126 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118E81EBBAB8E00EFF126 /* Exercise.swift */; };
+		CC2118EB1EBBB70000EFF126 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118EA1EBBB70000EFF126 /* GraphViewController.swift */; };
+		CC2118ED1EBBB88900EFF126 /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2118EC1EBBB88900EFF126 /* DataPoint.swift */; };
 		CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 		CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */; };
+		CCC8BAAC1EBEA4C2000217F0 /* face_abstract.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC8BAAB1EBEA4C2000217F0 /* face_abstract.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +32,7 @@
 		4EFDFE3CC0506C6A653CBBB4 /* Pods_BellsPalsyExerciseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BellsPalsyExerciseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56695EC1CE8B34B00BD7EAF /* DisplayLiveSamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = DisplayLiveSamples.app; path = BellsPalsyExerciseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A56695F11CE8B34B00BD7EAF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A56695F11CE8B34B00BD7EAF /* ExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewController.swift; sourceTree = "<group>"; };
 		A56695F41CE8B34B00BD7EAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A56695F61CE8B34B00BD7EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A56695F91CE8B34B00BD7EAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -44,6 +47,9 @@
 		CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewCell.swift; sourceTree = "<group>"; };
 		CC2118E81EBBAB8E00EFF126 /* Exercise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		CC2118EA1EBBB70000EFF126 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
+		CC2118EC1EBBB88900EFF126 /* DataPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
+		CCC8BAAB1EBEA4C2000217F0 /* face_abstract.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_abstract.png; sourceTree = "<group>"; };
 		E4E27AC4527B2CA831029ED9 /* Pods-BellsPalsyExerciseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BellsPalsyExerciseApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,12 +100,15 @@
 		A56695EE1CE8B34B00BD7EAF /* BellsPalsyExerciseApp */ = {
 			isa = PBXGroup;
 			children = (
+				CCC8BAAB1EBEA4C2000217F0 /* face_abstract.png */,
 				A5A1B2D01CEA317B00626AC5 /* DlibWrapper.h */,
 				A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */,
 				A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */,
-				A56695F11CE8B34B00BD7EAF /* ViewController.swift */,
+				A56695F11CE8B34B00BD7EAF /* ExerciseViewController.swift */,
 				CC2118E81EBBAB8E00EFF126 /* Exercise.swift */,
 				A56695F31CE8B34B00BD7EAF /* Main.storyboard */,
+				CC2118EA1EBBB70000EFF126 /* GraphViewController.swift */,
+				CC2118EC1EBBB88900EFF126 /* DataPoint.swift */,
 				CC2118E41EBBA94C00EFF126 /* MenuViewController.swift */,
 				CC2118E61EBBA9F900EFF126 /* MenuViewCell.swift */,
 				A56695F61CE8B34B00BD7EAF /* Assets.xcassets */,
@@ -190,6 +199,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCC8BAAC1EBEA4C2000217F0 /* face_abstract.png in Resources */,
 				CC2118E31EBBA6AA00EFF126 /* Podfile in Resources */,
 				CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */,
 				CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */,
@@ -256,9 +266,11 @@
 			files = (
 				A5A1B2D21CEA317B00626AC5 /* DlibWrapper.mm in Sources */,
 				CC2118E71EBBA9F900EFF126 /* MenuViewCell.swift in Sources */,
-				A56695F21CE8B34B00BD7EAF /* ViewController.swift in Sources */,
+				CC2118EB1EBBB70000EFF126 /* GraphViewController.swift in Sources */,
+				A56695F21CE8B34B00BD7EAF /* ExerciseViewController.swift in Sources */,
 				A56695F01CE8B34B00BD7EAF /* AppDelegate.swift in Sources */,
 				CC2118E51EBBA94C00EFF126 /* MenuViewController.swift in Sources */,
+				CC2118ED1EBBB88900EFF126 /* DataPoint.swift in Sources */,
 				CC2118E91EBBAB8E00EFF126 /* Exercise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
