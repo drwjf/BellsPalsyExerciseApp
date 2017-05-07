@@ -17,6 +17,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	@IBOutlet weak var leftEdge: UILabel!
 	@IBOutlet weak var transparentView: UIView!
 	@IBOutlet weak var guide: UIImageView!
+	@IBOutlet weak var timerLabel: UILabel!
 	
 	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
 	var session = AVCaptureSession()
@@ -25,6 +26,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
 	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
 	let wrapper = DlibWrapper()
+	
+	var timer = Timer()
+	var countdown = 0
 	
 	var count:Double = 0;
 	var standardDeviation:Double = 0.0
@@ -40,6 +44,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	{
 		var leftEyeDataPoints = [CGPoint]()
 		var rightEyeDataPoints = [CGPoint]()
+		let threshold:CGFloat = 50
 		
 		func average(array: [CGPoint]) -> CGPoint
 		{
@@ -110,6 +115,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		leftEdge.layer.zPosition = 2
 		transparentView.layer.zPosition = 1
 		guide.layer.zPosition = 2
+		timerLabel.layer.zPosition = 2
+		timerLabel.alpha = 0
 		rightEdge.backgroundColor = UIColor.clear
 		leftEdge.backgroundColor = UIColor.clear
 		transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.0)
@@ -223,6 +230,21 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			let points = wrapper?.doWork(on: sampleBuffer, inRects: boundsArray) as! [NSArray]
 			var difference:Double = 0.0
 			
+			// face location validation --------
+			// left eye
+			let leftEyeLeftUpperCorner = points[37] as! [NSNumber]
+			let leftEyeRightUpperCorner = points[38] as! [NSNumber]
+			let leftEyeLeftLowerCorner = points[41] as! [NSNumber]
+			let leftEyeRightLowerCorner = points[40] as! [NSNumber]
+			// right eye
+			let rightEyeLeftUpperCorner = points[43] as! [NSNumber]
+			let rightEyeRightUpperCorner = points[44] as! [NSNumber]
+			let rightEyeLeftLowerCorner = points[47] as! [NSNumber]
+			let rightEyeRightLowerCorner = points[46] as! [NSNumber]
+			
+			stabilizer.add(left: CGPoint(x: (leftEyeLeftUpperCorner[0].cgFloatValue() + leftEyeRightUpperCorner[0].cgFloatValue() + leftEyeLeftLowerCorner[0].cgFloatValue() + leftEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (leftEyeLeftUpperCorner[1].cgFloatValue() + leftEyeRightUpperCorner[1].cgFloatValue() + leftEyeLeftLowerCorner[1].cgFloatValue() + leftEyeRightLowerCorner[1].cgFloatValue())/4.0), right: (CGPoint(x: (rightEyeLeftUpperCorner[0].cgFloatValue() + rightEyeRightUpperCorner[0].cgFloatValue() + rightEyeLeftLowerCorner[0].cgFloatValue() + rightEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (rightEyeLeftUpperCorner[1].cgFloatValue() + rightEyeRightUpperCorner[1].cgFloatValue() + rightEyeLeftLowerCorner[1].cgFloatValue() + rightEyeRightLowerCorner[1].cgFloatValue())/4.0)))
+			// ---------------------------------
+			
 			if (currentExercise < 0)
 			{
 				let leftEyebrowInnerEdge = points[21] as! [NSNumber]
@@ -244,22 +266,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			}
 			else if (currentExercise == 1)
 			{
-				// left eye
-				let leftEyeLeftUpperCorner = points[37] as! [NSNumber]
-				let leftEyeRightUpperCorner = points[38] as! [NSNumber]
-				let leftEyeLeftLowerCorner = points[41] as! [NSNumber]
-				let leftEyeRightLowerCorner = points[40] as! [NSNumber]
-				// right eye
-				let rightEyeLeftUpperCorner = points[43] as! [NSNumber]
-				let rightEyeRightUpperCorner = points[44] as! [NSNumber]
-				let rightEyeLeftLowerCorner = points[47] as! [NSNumber]
-				let rightEyeRightLowerCorner = points[46] as! [NSNumber]
-				
 				let leftEyeClosure = (abs(leftEyeLeftUpperCorner[1].doubleValue - leftEyeLeftLowerCorner[1].doubleValue) + abs(leftEyeRightUpperCorner[1].doubleValue - leftEyeRightLowerCorner[1].doubleValue)) / 2.0
 				
 				let rightEyeClosure = (abs(rightEyeLeftUpperCorner[1].doubleValue - rightEyeLeftLowerCorner[1].doubleValue) + abs(rightEyeRightUpperCorner[1].doubleValue - rightEyeRightLowerCorner[1].doubleValue)) / 2.0
-				
-				stabilizer.add(left: CGPoint(x: (leftEyeLeftUpperCorner[0].cgFloatValue() + leftEyeRightUpperCorner[0].cgFloatValue() + leftEyeLeftLowerCorner[0].cgFloatValue() + leftEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (leftEyeLeftUpperCorner[1].cgFloatValue() + leftEyeRightUpperCorner[1].cgFloatValue() + leftEyeLeftLowerCorner[1].cgFloatValue() + leftEyeRightLowerCorner[1].cgFloatValue())/4.0), right: (CGPoint(x: (rightEyeLeftUpperCorner[0].cgFloatValue() + rightEyeRightUpperCorner[0].cgFloatValue() + rightEyeLeftLowerCorner[0].cgFloatValue() + rightEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (rightEyeLeftUpperCorner[1].cgFloatValue() + rightEyeRightUpperCorner[1].cgFloatValue() + rightEyeLeftLowerCorner[1].cgFloatValue() + rightEyeRightLowerCorner[1].cgFloatValue())/4.0)))
 				
 				difference = abs(Double(leftEyeClosure - rightEyeClosure))
 			}
@@ -318,9 +327,19 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
 					}
 					
-					if (abs(self.leftEyeReference.x - reference[0].x) < 35 && abs(self.leftEyeReference.y - reference[0].y) < 35 && abs(self.rightEyeReference.x - reference[1].x) < 35 && abs(self.rightEyeReference.y - reference[1].y) < 35)
+					if (abs(self.leftEyeReference.x - reference[0].x) < self.stabilizer.threshold && abs(self.leftEyeReference.y - reference[0].y) < self.stabilizer.threshold && abs(self.rightEyeReference.x - reference[1].x) < self.stabilizer.threshold && abs(self.rightEyeReference.y - reference[1].y) < self.stabilizer.threshold)
 					{
 						print("success")
+						self.guide.alpha = 0
+						if (!self.timer.isValid)
+						{
+							self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+							self.timerLabel.text = "\(self.countdown)"
+						}
+					}
+					else
+					{
+						self.guide.alpha = 1
 					}
 					
 					self.leftEdge.text = "x: \(reference[0].x)\ny\(reference[0].y)"
@@ -355,6 +374,22 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 //		let screenBounds = UIScreen.main.bounds
 //		print("x:\(screenBounds.width) y:\(screenBounds.height)")
 		// screen resolution : 1334 * 750
+	}
+	
+	func timerAction()
+	{
+		if (countdown == 0)
+		{
+			timer.invalidate()
+			countdown = 3
+			timerLabel.alpha = 0
+		}
+		else
+		{
+			timerLabel.alpha = 1
+			countdown -= 1
+		}
+		timerLabel.text = "\(countdown)"
 	}
 }
 

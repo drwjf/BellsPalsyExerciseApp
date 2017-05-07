@@ -90,6 +90,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTW-fr-HoA" userLabel="Timer">
+                                <rect key="frame" x="16" y="70" width="343" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="1" green="0.40830014868439757" blue="0.36342392911172328" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BjT-Wi-yah">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" red="0.97683578729629517" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -123,12 +129,16 @@
                             <constraint firstItem="tFW-yQ-0Af" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Akc-WM-dUg"/>
                             <constraint firstItem="BjT-Wi-yah" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Av1-z8-XsE"/>
                             <constraint firstAttribute="trailing" secondItem="BjT-Wi-yah" secondAttribute="trailing" id="Bz9-tz-ncB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yTW-fr-HoA" secondAttribute="trailing" id="CQP-FT-bz3"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kjm-8m-XUS" secondAttribute="trailing" id="JGc-Wy-rir"/>
+                            <constraint firstItem="yTW-fr-HoA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="KvM-MC-SFL"/>
                             <constraint firstItem="DuK-sj-GlH" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Mmr-zn-r3O"/>
                             <constraint firstAttribute="trailing" secondItem="DuK-sj-GlH" secondAttribute="trailing" id="QOa-pt-40E"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DuK-sj-GlH" secondAttribute="bottom" id="d9E-PJ-dda"/>
+                            <constraint firstItem="yTW-fr-HoA" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="50" id="g13-2b-GNd"/>
                             <constraint firstItem="BjT-Wi-yah" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="maj-ec-YyO"/>
                             <constraint firstItem="kjm-8m-XUS" firstAttribute="top" secondItem="tFW-yQ-0Af" secondAttribute="top" id="vGE-PR-jSy"/>
+                            <constraint firstItem="yTW-fr-HoA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wfP-Oa-OUk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ve9-JP-wiD"/>
@@ -137,6 +147,7 @@
                         <outlet property="leftEdge" destination="tFW-yQ-0Af" id="W6r-do-eLd"/>
                         <outlet property="preview" destination="DuK-sj-GlH" id="zI8-Mb-T67"/>
                         <outlet property="rightEdge" destination="kjm-8m-XUS" id="YmA-pm-CPl"/>
+                        <outlet property="timerLabel" destination="yTW-fr-HoA" id="spB-22-BFG"/>
                         <outlet property="transparentView" destination="BjT-Wi-yah" id="PKW-Ib-xuh"/>
                     </connections>
                 </viewController>
