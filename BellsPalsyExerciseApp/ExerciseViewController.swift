@@ -33,6 +33,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	var dataPoints = [Double]()
 	let frameCount = 15
 	
+	let leftEyeReference = CGPoint(x: 225, y: 560)
+	let rightEyeReference = CGPoint(x: 535, y: 560)
+	
 	struct Stabilization
 	{
 		var leftEyeDataPoints = [CGPoint]()
@@ -315,6 +318,11 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
 					}
 					
+					if (abs(self.leftEyeReference.x - reference[0].x) < 35 && abs(self.leftEyeReference.y - reference[0].y) < 35 && abs(self.rightEyeReference.x - reference[1].x) < 35 && abs(self.rightEyeReference.y - reference[1].y) < 35)
+					{
+						print("success")
+					}
+					
 					self.leftEdge.text = "x: \(reference[0].x)\ny\(reference[0].y)"
 					self.rightEdge.text = "x: \(reference[1].x)\ny\(reference[1].y)"
 					
@@ -338,5 +346,15 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		currentMetadata = metadataObjects as [AnyObject]
 	}
 
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+	{
+		if let touch = touches.first
+		{
+			print("x:\(2 * touch.location(in: self.view).x) y:\(2 * touch.location(in: self.view).y)")
+		}
+//		let screenBounds = UIScreen.main.bounds
+//		print("x:\(screenBounds.width) y:\(screenBounds.height)")
+		// screen resolution : 1334 * 750
+	}
 }
 

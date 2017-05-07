@@ -94,14 +94,14 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" red="0.97683578729629517" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tFW-yQ-0Af" userLabel="Left Edge">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tFW-yQ-0Af" userLabel="Left Edge">
                                 <rect key="frame" x="16" y="20" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kjm-8m-XUS" userLabel="Right Edge">
-                                <rect key="frame" x="187" y="41" width="172" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kjm-8m-XUS" userLabel="Right Edge">
+                                <rect key="frame" x="317" y="20" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -128,7 +128,7 @@
                             <constraint firstAttribute="trailing" secondItem="DuK-sj-GlH" secondAttribute="trailing" id="QOa-pt-40E"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DuK-sj-GlH" secondAttribute="bottom" id="d9E-PJ-dda"/>
                             <constraint firstItem="BjT-Wi-yah" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="maj-ec-YyO"/>
-                            <constraint firstItem="kjm-8m-XUS" firstAttribute="top" secondItem="tFW-yQ-0Af" secondAttribute="bottom" id="vGE-PR-jSy"/>
+                            <constraint firstItem="kjm-8m-XUS" firstAttribute="top" secondItem="tFW-yQ-0Af" secondAttribute="top" id="vGE-PR-jSy"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ve9-JP-wiD"/>
