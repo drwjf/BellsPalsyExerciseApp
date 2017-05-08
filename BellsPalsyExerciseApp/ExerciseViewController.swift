@@ -19,6 +19,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	@IBOutlet weak var guide: UIImageView!
 	@IBOutlet weak var timerLabel: UILabel!
 	@IBOutlet weak var buttonOutlet: UIButton!
+	@IBOutlet weak var navigationBar: UINavigationItem!
 	
 	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
 	var session = AVCaptureSession()
@@ -108,10 +109,26 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
     @IBOutlet weak var preview: UIView!
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+	{
         super.viewDidLoad()
 		
 		navigationItem.title = exercises[currentExercise].name
+
+		if let navController = self.navigationController
+		{
+			navController.navigationBar.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+			navigationItem.title = exercises[currentExercise].name
+			navController.title = exercises[currentExercise].name
+			navController.navigationBar.tintColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+		}
+
+		/*
+		// Sets the translucent background color
+		UINavigationBar.appearance().backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
+		// Set translucent. (Default value is already true, so this can be removed if desired.)
+		UINavigationBar.appearance().isTranslucent = true
+		*/
 		
 		rightEdge.layer.zPosition = 2
 		leftEdge.layer.zPosition = 2

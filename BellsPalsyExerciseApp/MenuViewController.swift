@@ -18,8 +18,16 @@ class MenuViewController: UITableViewController
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		navigationBar.title = "Menu"
+		navigationItem.title = "Menu"
+
 		
+
+/*
+		// Sets the translucent background color
+		UINavigationBar.appearance().backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+		// Set translucent. (Default value is already true, so this can be removed if desired.)
+		UINavigationBar.appearance().isTranslucent = false
+*/
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -27,6 +35,21 @@ class MenuViewController: UITableViewController
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+	override func viewWillAppear(_ animated: Bool)
+	{
+		if let navController = self.navigationController
+		{
+			navController.navigationBar.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+			navController.navigationItem.title = "Menu"
+			navController.navigationBar.tintColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+		}
+	}
+	
+	override var prefersStatusBarHidden: Bool
+	{
+		return true
+	}
+	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

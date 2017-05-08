@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Confident Smile-->
+        <!--Menu View Controller-->
         <scene sceneID="PMR-eN-XjR">
             <objects>
-                <tableViewController title="Confident Smile" id="qb0-th-sMk" customClass="MenuViewController" customModule="BellsPalsyExerciseApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Confident Smile" id="qb0-th-sMk" userLabel="Menu View Controller" customClass="MenuViewController" customModule="BellsPalsyExerciseApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="QSk-eU-12h">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,7 +68,7 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="Ffz-Zi-d3V"/>
                     <connections>
-                        <outlet property="navigationBar" destination="Ffz-Zi-d3V" id="OHj-bQ-dfE"/>
+                        <outlet property="navigationBar" destination="Ffz-Zi-d3V" id="23O-Pe-v40"/>
                         <segue destination="BYZ-38-t0r" kind="showDetail" identifier="exerciseSegue" action="showViewController:sender:" id="Hgq-RD-IoB"/>
                         <segue destination="5kl-U0-SH2" kind="showDetail" identifier="progressSegue" action="showViewController:sender:" id="tKp-eo-ZJm"/>
                     </connections>
@@ -158,6 +158,7 @@
                         <outlet property="buttonOutlet" destination="929-Qg-HP6" id="j3R-8V-NM2"/>
                         <outlet property="guide" destination="4ID-bt-njP" id="HeG-k8-FTs"/>
                         <outlet property="leftEdge" destination="tFW-yQ-0Af" id="W6r-do-eLd"/>
+                        <outlet property="navigationBar" destination="ve9-JP-wiD" id="pC5-RI-FRq"/>
                         <outlet property="preview" destination="DuK-sj-GlH" id="zI8-Mb-T67"/>
                         <outlet property="rightEdge" destination="kjm-8m-XUS" id="YmA-pm-CPl"/>
                         <outlet property="timerLabel" destination="yTW-fr-HoA" id="spB-22-BFG"/>
@@ -207,7 +208,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="lQD-4K-hkD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" alpha="0.0" contentMode="scaleToFill" misplaced="YES" id="Aoa-XA-p5f">
+                    <navigationBar key="navigationBar" opaque="NO" alpha="0.0" contentMode="scaleToFill" id="Aoa-XA-p5f">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
