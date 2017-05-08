@@ -18,6 +18,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	@IBOutlet weak var transparentView: UIView!
 	@IBOutlet weak var guide: UIImageView!
 	@IBOutlet weak var timerLabel: UILabel!
+	@IBOutlet weak var buttonOutlet: UIButton!
 	
 	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
 	var session = AVCaptureSession()
@@ -27,8 +28,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
 	let wrapper = DlibWrapper()
 	
-	var timer = Timer()
+	var timer: Timer?
 	var countdown = 0
+	var exercising = false
 	
 	var count:Double = 0;
 	var standardDeviation:Double = 0.0
@@ -116,6 +118,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		transparentView.layer.zPosition = 1
 		guide.layer.zPosition = 2
 		timerLabel.layer.zPosition = 2
+		buttonOutlet.layer.zPosition = 2
 		timerLabel.alpha = 0
 		rightEdge.backgroundColor = UIColor.clear
 		leftEdge.backgroundColor = UIColor.clear
@@ -329,17 +332,24 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					
 					if (abs(self.leftEyeReference.x - reference[0].x) < self.stabilizer.threshold && abs(self.leftEyeReference.y - reference[0].y) < self.stabilizer.threshold && abs(self.rightEyeReference.x - reference[1].x) < self.stabilizer.threshold && abs(self.rightEyeReference.y - reference[1].y) < self.stabilizer.threshold)
 					{
-						print("success")
+//						print("success")
 						self.guide.alpha = 0
-						if (!self.timer.isValid)
+						if (self.timer == nil && self.exercising)
 						{
-							self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+							self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
+/*
 							self.timerLabel.text = "\(self.countdown)"
+							self.timerLabel.alpha = 1
+*/
 						}
 					}
 					else
 					{
 						self.guide.alpha = 1
+						if (self.exercising)
+						{
+							self.buttonAction(self)
+						}
 					}
 					
 					self.leftEdge.text = "x: \(reference[0].x)\ny\(reference[0].y)"
@@ -347,6 +357,20 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					
 				}
 				// Smiling End
+			}
+		}
+		else
+		{
+//			print("not valid")
+			DispatchQueue.main.async
+			{
+				if (self.timer != nil)
+				{
+					self.timer?.invalidate()
+					self.timer = nil
+					self.countdown = 3
+					self.timerLabel.alpha = 0
+				}
 			}
 		}
 		
@@ -378,9 +402,11 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	func timerAction()
 	{
+		timerLabel.text = "\(countdown)"
 		if (countdown == 0)
 		{
-			timer.invalidate()
+			timer?.invalidate()
+			timer = nil
 			countdown = 3
 			timerLabel.alpha = 0
 		}
@@ -389,7 +415,22 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			timerLabel.alpha = 1
 			countdown -= 1
 		}
-		timerLabel.text = "\(countdown)"
 	}
+	
+	@IBAction func buttonAction(_ sender: Any)
+	{
+		if (exercising)
+		{
+			buttonOutlet.setTitle("Start", for: UIControlState.normal)
+			buttonOutlet.setTitleColor(UIColor.green, for: UIControlState.normal)
+		}
+		else
+		{
+			buttonOutlet.setTitle("End", for: UIControlState.normal)
+			buttonOutlet.setTitleColor(UIColor.red, for: UIControlState.normal)
+		}
+		exercising = !exercising
+	}
+	
 }
 
