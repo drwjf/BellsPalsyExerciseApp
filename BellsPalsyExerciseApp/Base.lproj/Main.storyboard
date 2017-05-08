@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,34 +20,59 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="exerciseCell" id="1FK-Kb-wY9" customClass="MenuViewCell" customModule="BellsPalsyExerciseApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="exerciseCell" rowHeight="221" id="1FK-Kb-wY9" customClass="ExerciseTableViewCell" customModule="BellsPalsyExerciseApp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="221"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1FK-Kb-wY9" id="9fj-Xd-I4Z">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="221"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="exercise" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jez-C1-lOy" userLabel="exercise">
-                                            <rect key="frame" x="8" y="11" width="359" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vDm-mP-DuV" userLabel="Demonstration">
+                                            <rect key="frame" x="230.5" y="8" width="136.5" height="205"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="vDm-mP-DuV" secondAttribute="height" multiplier="2:3" id="Bje-cl-R5a"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="exercise" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jez-C1-lOy" userLabel="Exercise Name">
+                                            <rect key="frame" x="8" y="28" width="202.5" height="43"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="explanation" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXK-rJ-NKS" userLabel="Explanation">
+                                            <rect key="frame" x="8" y="79" width="203" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="vDm-mP-DuV" firstAttribute="leading" secondItem="bXK-rJ-NKS" secondAttribute="trailing" constant="20" id="AQr-Yf-sgb"/>
+                                        <constraint firstItem="bXK-rJ-NKS" firstAttribute="leading" secondItem="9fj-Xd-I4Z" secondAttribute="leadingMargin" id="LxP-Ov-zMB"/>
+                                        <constraint firstItem="bXK-rJ-NKS" firstAttribute="top" secondItem="jez-C1-lOy" secondAttribute="bottom" constant="8" id="MWG-7K-eSY"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="bXK-rJ-NKS" secondAttribute="bottom" priority="250" constant="8" id="O62-bR-F2u"/>
+                                        <constraint firstItem="jez-C1-lOy" firstAttribute="top" secondItem="9fj-Xd-I4Z" secondAttribute="topMargin" constant="20" id="XsJ-zn-iGy"/>
+                                        <constraint firstItem="vDm-mP-DuV" firstAttribute="leading" secondItem="jez-C1-lOy" secondAttribute="trailing" constant="20" id="aeK-Ir-tkO"/>
+                                        <constraint firstItem="vDm-mP-DuV" firstAttribute="top" secondItem="9fj-Xd-I4Z" secondAttribute="topMargin" id="eIb-y3-JYB"/>
+                                        <constraint firstItem="vDm-mP-DuV" firstAttribute="bottom" secondItem="9fj-Xd-I4Z" secondAttribute="bottomMargin" id="fRE-zE-lHt"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="vDm-mP-DuV" secondAttribute="trailing" id="uvz-eh-Lho"/>
+                                        <constraint firstItem="jez-C1-lOy" firstAttribute="leading" secondItem="9fj-Xd-I4Z" secondAttribute="leadingMargin" id="xJU-de-7HM"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="label" destination="jez-C1-lOy" id="rv1-CB-Ach"/>
+                                    <outlet property="demo" destination="vDm-mP-DuV" id="Hek-cj-Tp3"/>
+                                    <outlet property="exerciseLabel" destination="jez-C1-lOy" id="HX3-zO-KkP"/>
+                                    <outlet property="explanationLabel" destination="bXK-rJ-NKS" id="YEL-OR-Wne"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="progressCell" id="IWv-Bh-1IL" customClass="MenuViewCell" customModule="BellsPalsyExerciseApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="progressCell" id="IWv-Bh-1IL" customClass="ProgressTableViewCell" customModule="BellsPalsyExerciseApp" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="249" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IWv-Bh-1IL" id="2FG-lx-EjH">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UC8-ZQ-bJI" userLabel="progress">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="progressCell" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UC8-ZQ-bJI" userLabel="progress">
                                             <rect key="frame" x="8" y="11" width="359" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -75,7 +101,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7g6-63-YvZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1231" y="-546"/>
+            <point key="canvasLocation" x="1229.5999999999999" y="-546.47676161919048"/>
         </scene>
         <!--Exercise View Controller-->
         <scene sceneID="tne-QT-ifu">

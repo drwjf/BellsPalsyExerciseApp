@@ -10,7 +10,6 @@ import UIKit
 
 class MenuViewController: UITableViewController
 {
-	
 	let exercises = ["Smiling","Blinking"]
 
 	@IBOutlet weak var navigationBar: UINavigationItem!
@@ -80,15 +79,39 @@ class MenuViewController: UITableViewController
 		}
 	}
 	
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "exerciseCell", for: indexPath) as! MenuViewCell
-
-        // Configure the cell...
-
-		cell.label.text = exercises[indexPath.row]
-		
-        return cell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+	{
+		if (indexPath.section == 0)
+		{
+			let cell = tableView.dequeueReusableCell(withIdentifier: "exerciseCell", for: indexPath) as! ExerciseTableViewCell
+			if let fileURL = Bundle.main.url(forResource: exercises[indexPath.row], withExtension: "png")
+			{
+				let data = NSData(contentsOf: fileURL)
+				cell.demo.image = UIImage(data: data! as Data)
+			}
+			cell.exerciseLabel.text = exercises[indexPath.row]
+			cell.explanationLabel.text = "This exercise will train the following muscles:\n- first\n- second\n- third"
+			return cell
+		}
+		else
+		{
+			let cell = tableView.dequeueReusableCell(withIdentifier: "progressCell", for: indexPath) as! ProgressTableViewCell
+			cell.label.text = exercises[indexPath.row]
+			return cell
+		}
     }
+	
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+	{
+		if (indexPath.section == 0)
+		{
+			return 225
+		}
+		else
+		{
+			return 44
+		}
+	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 	{
