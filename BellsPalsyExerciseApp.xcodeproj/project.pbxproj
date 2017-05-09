@@ -26,6 +26,10 @@
 		CC319F4C1EC0E1B1003B0397 /* Blinking.png in Resources */ = {isa = PBXBuildFile; fileRef = CC319F491EC0E1B1003B0397 /* Blinking.png */; };
 		CC319F4D1EC0E1B1003B0397 /* Smiling.png in Resources */ = {isa = PBXBuildFile; fileRef = CC319F4A1EC0E1B1003B0397 /* Smiling.png */; };
 		CC319F501EC0E34B003B0397 /* ExerciseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC319F4F1EC0E34B003B0397 /* ExerciseTableViewCell.swift */; };
+		CC8486511EC18BFC00F31CF6 /* smile_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CC8486501EC18BFC00F31CF6 /* smile_logo.png */; };
+		CC8486531EC18E1B00F31CF6 /* Otterly Adorable - OTF.otf in Resources */ = {isa = PBXBuildFile; fileRef = CC8486521EC18DF600F31CF6 /* Otterly Adorable - OTF.otf */; };
+		CC8486581EC1922300F31CF6 /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = CC8486561EC1922300F31CF6 /* title.png */; };
+		CC8486591EC1922300F31CF6 /* subtitle.png in Resources */ = {isa = PBXBuildFile; fileRef = CC8486571EC1922300F31CF6 /* subtitle.png */; };
 		CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 		CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */; };
 		CCC8BAAC1EBEA4C2000217F0 /* face_abstract.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC8BAAB1EBEA4C2000217F0 /* face_abstract.png */; };
@@ -57,6 +61,10 @@
 		CC319F491EC0E1B1003B0397 /* Blinking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blinking.png; sourceTree = "<group>"; };
 		CC319F4A1EC0E1B1003B0397 /* Smiling.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Smiling.png; sourceTree = "<group>"; };
 		CC319F4F1EC0E34B003B0397 /* ExerciseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExerciseTableViewCell.swift; sourceTree = "<group>"; };
+		CC8486501EC18BFC00F31CF6 /* smile_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile_logo.png; sourceTree = "<group>"; };
+		CC8486521EC18DF600F31CF6 /* Otterly Adorable - OTF.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Otterly Adorable - OTF.otf"; sourceTree = "<group>"; };
+		CC8486561EC1922300F31CF6 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
+		CC8486571EC1922300F31CF6 /* subtitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = subtitle.png; sourceTree = "<group>"; };
 		CCC8BAAB1EBEA4C2000217F0 /* face_abstract.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face_abstract.png; sourceTree = "<group>"; };
 		E4E27AC4527B2CA831029ED9 /* Pods-BellsPalsyExerciseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BellsPalsyExerciseApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-BellsPalsyExerciseApp/Pods-BellsPalsyExerciseApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,6 +116,7 @@
 		A56695EE1CE8B34B00BD7EAF /* BellsPalsyExerciseApp */ = {
 			isa = PBXGroup;
 			children = (
+				CC8486521EC18DF600F31CF6 /* Otterly Adorable - OTF.otf */,
 				CC319F4E1EC0E1B7003B0397 /* Images */,
 				A5A1B2D01CEA317B00626AC5 /* DlibWrapper.h */,
 				A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */,
@@ -131,6 +140,9 @@
 		CC319F4E1EC0E1B7003B0397 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				CC8486561EC1922300F31CF6 /* title.png */,
+				CC8486571EC1922300F31CF6 /* subtitle.png */,
+				CC8486501EC18BFC00F31CF6 /* smile_logo.png */,
 				CC319F481EC0E1B1003B0397 /* Kissing.png */,
 				CC319F491EC0E1B1003B0397 /* Blinking.png */,
 				CC319F4A1EC0E1B1003B0397 /* Smiling.png */,
@@ -219,14 +231,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC8486531EC18E1B00F31CF6 /* Otterly Adorable - OTF.otf in Resources */,
 				CC319F4C1EC0E1B1003B0397 /* Blinking.png in Resources */,
 				CCC8BAAC1EBEA4C2000217F0 /* face_abstract.png in Resources */,
+				CC8486511EC18BFC00F31CF6 /* smile_logo.png in Resources */,
 				CC2118E31EBBA6AA00EFF126 /* Podfile in Resources */,
 				CCC269F51EA39613008B3159 /* shape_predictor_68_face_landmarks.dat in Resources */,
 				CC319F4D1EC0E1B1003B0397 /* Smiling.png in Resources */,
 				CCA99F881EA3934A0056CE55 /* libdlib.a in Resources */,
 				CC319F4B1EC0E1B1003B0397 /* Kissing.png in Resources */,
+				CC8486581EC1922300F31CF6 /* title.png in Resources */,
 				A56695FA1CE8B34B00BD7EAF /* LaunchScreen.storyboard in Resources */,
+				CC8486591EC1922300F31CF6 /* subtitle.png in Resources */,
 				A56695F71CE8B34B00BD7EAF /* Assets.xcassets in Resources */,
 				A56695F51CE8B34B00BD7EAF /* Main.storyboard in Resources */,
 			);
