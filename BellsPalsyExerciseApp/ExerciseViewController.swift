@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import CoreData
 
 var currentExercise = 0
 
@@ -42,6 +43,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	let leftEyeReference = CGPoint(x: 225, y: 560)
 	let rightEyeReference = CGPoint(x: 535, y: 560)
+	
+	let moc = DataController(completionClosure: {}).managedObjectContext
 	
 	struct Stabilization
 	{
@@ -152,6 +155,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     override func viewDidAppear(_ animated: Bool)
 	{
 		super.viewDidAppear(animated)
+		addData()
         openSession()
 		self.preview.layer.addSublayer(layer)
 	}
@@ -447,6 +451,31 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			buttonOutlet.setTitleColor(UIColor.red, for: UIControlState.normal)
 		}
 		exercising = !exercising
+	}
+	
+	func addData()
+	{
+		let entity = NSEntityDescription.insertNewObject(forEntityName: "DataPoint", into: moc) as! ExerciseDataPoint
+		entity.setValue(exercises[currentExercise].name,forKey: "name")
+		entity.setValue(0.7,forKey: "performance")
+		entity.setValue(Date(),forKey: "date")
+		do {
+			try moc.save()
+		} catch {
+			fatalError("Failure to save context: \(error)")
+		}
+		fetch()
+	}
+	
+	func fetch()
+	{
+		let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataPoint")
+		do {
+			let fetchedPerson = try moc.fetch(personFetch) as! [ExerciseDataPoint]
+			print(fetchedPerson.first!.name!)
+		} catch {
+			fatalError("Failed to fetch person: \(error)")
+		}
 	}
 	
 }
