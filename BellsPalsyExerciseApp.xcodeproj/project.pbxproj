@@ -127,16 +127,16 @@
 				A56695EF1CE8B34B00BD7EAF /* AppDelegate.swift */,
 				CC2118EC1EBBB88900EFF126 /* DataPoint.swift */,
 				CC2118E81EBBAB8E00EFF126 /* Exercise.swift */,
-				A56695F31CE8B34B00BD7EAF /* Main.storyboard */,
 				CC4F32181EC3555900BBBE49 /* View Controllers */,
 				CC319F4F1EC0E34B003B0397 /* ExerciseTableViewCell.swift */,
 				CC2118E61EBBA9F900EFF126 /* ProgressTableViewCell.swift */,
-				A56695F61CE8B34B00BD7EAF /* Assets.xcassets */,
+				A56695F31CE8B34B00BD7EAF /* Main.storyboard */,
 				A56695F81CE8B34B00BD7EAF /* LaunchScreen.storyboard */,
 				A56695FB1CE8B34B00BD7EAF /* Info.plist */,
 				A5A1B2CF1CEA317B00626AC5 /* BellsPalsyExerciseApp-Bridging-Header.h */,
 				CC4F321C1EC3571000BBBE49 /* ExerciseDataModel.xcdatamodeld */,
 				CC4F321F1EC3590B00BBBE49 /* DataController.swift */,
+				A56695F61CE8B34B00BD7EAF /* Assets.xcassets */,
 			);
 			path = BellsPalsyExerciseApp;
 			sourceTree = "<group>";

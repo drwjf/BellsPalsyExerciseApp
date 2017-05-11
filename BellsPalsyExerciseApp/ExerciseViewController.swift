@@ -12,15 +12,16 @@ import CoreData
 
 class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
-	@IBOutlet weak var rightEdge: UILabel!
-	@IBOutlet weak var leftEdge: UILabel!
+	@IBOutlet weak var scoreLabel: UILabel!
 	@IBOutlet weak var transparentView: UIView!
 	@IBOutlet weak var guide: UIImageView!
 	@IBOutlet weak var timerLabel: UILabel!
 	@IBOutlet weak var buttonOutlet: UIButton!
 	@IBOutlet weak var navigationBar: UINavigationItem!
 	
-	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0),Exercise(name:"KISSING",threshold: 5.0)]
+	@IBOutlet weak var feedbackLabel: UILabel!
+	
+	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0),Exercise(name:"KISSING",threshold: 40.0)]
 	var session = AVCaptureSession()
 	var output = AVCaptureVideoDataOutput()
 	let layer = AVSampleBufferDisplayLayer()
@@ -31,6 +32,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	var timer: Timer?
 	var countdown = 0
 	var exercising = false
+	var mistake = false
+	var performing = false
+	var score = 0
 	
 	var count:Double = 0;
 	var standardDeviation:Double = 0.0
@@ -44,9 +48,9 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	struct Stabilization
 	{
-		var leftEyeDataPoints = [CGPoint]()
-		var rightEyeDataPoints = [CGPoint]()
-		let threshold:CGFloat = 50
+		var left = [CGPoint]()
+		var right = [CGPoint]()
+		var threshold:CGFloat = 50
 		
 		func average(array: [CGPoint]) -> CGPoint
 		{
@@ -79,7 +83,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			var result = CGPoint(x: 0, y: 0)
 			for data in array
 			{
-				if (data.x > ave.x - sd.x && data.x < ave.x + sd.x && data.y > ave.y - sd.y && data.y < ave.y + sd.y)
+				if (data.x > ave.x - sd.x && data.x < ave.x + sd.x && data.y >= ave.y - sd.y && data.y <= ave.y + sd.y)
 				{
 					result = CGPoint(x: result.x + data.x, y: result.y + data.y)
 					validDataCount += 1
@@ -88,23 +92,25 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			return CGPoint(x: result.x / CGFloat(validDataCount), y: result.y / CGFloat(validDataCount))
 		}
 		
-		mutating func filter() -> [CGPoint] {
-			let result = [self.AVTFiltering(array: self.leftEyeDataPoints),self.AVTFiltering(array: self.rightEyeDataPoints)]
-			self.leftEyeDataPoints.removeAll()
-			self.rightEyeDataPoints.removeAll()
+		mutating func filter() -> [CGPoint]
+		{
+			let result = [self.AVTFiltering(array: self.left),self.AVTFiltering(array: self.right)]
+			self.left.removeAll()
+			self.right.removeAll()
 			return result
 		}
 		
 		mutating func add(left: CGPoint, right: CGPoint)
 		{
-			self.leftEyeDataPoints.append(left)
-			self.rightEyeDataPoints.append(right)
+			self.left.append(left)
+			self.right.append(right)
 		}
 	}
 	
-	var stabilizer = Stabilization()
+	var eyes = Stabilization()
+	var exercise = Stabilization()
 	
-	var currentMetadata: [AnyObject] = []
+	var currentMetadata = [AnyObject]()
 	
     @IBOutlet weak var preview: UIView!
     
@@ -123,22 +129,24 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			navController.navigationBar.tintColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
 		}
 
-		/*
-		// Sets the translucent background color
-		UINavigationBar.appearance().backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-		// Set translucent. (Default value is already true, so this can be removed if desired.)
-		UINavigationBar.appearance().isTranslucent = true
-		*/
 		
-		rightEdge.layer.zPosition = 2
-		leftEdge.layer.zPosition = 2
+		if (currentExercise == 1)
+		{
+			exercise.threshold = exercises[currentExercise].threshold
+		}
+		else if (currentExercise == 2)
+		{
+			exercise.threshold = exercises[currentExercise].threshold
+		}
+		
+		scoreLabel.layer.zPosition = 2
 		transparentView.layer.zPosition = 1
 		guide.layer.zPosition = 2
 		timerLabel.layer.zPosition = 2
 		buttonOutlet.layer.zPosition = 2
+		feedbackLabel.layer.zPosition = 3
 		timerLabel.alpha = 0
-		rightEdge.backgroundColor = UIColor.clear
-		leftEdge.backgroundColor = UIColor.clear
+		scoreLabel.backgroundColor = UIColor.clear
 		transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.0)
 //		transparentView.backgroundColor = UIColor.clear
         // Do any additional setup after loading the view, typically from a nib.
@@ -165,8 +173,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	override func viewWillDisappear(_ animated: Bool)
 	{
-		super.viewWillDisappear(animated)
 		session.stopRunning()
+		super.viewWillDisappear(animated)
 	}
 	
 	func updateVideoOrientation () {
@@ -269,27 +277,22 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			let rightEyeLeftLowerCorner = points[47] as! [NSNumber]
 			let rightEyeRightLowerCorner = points[46] as! [NSNumber]
 			
-			stabilizer.add(left: CGPoint(x: (leftEyeLeftUpperCorner[0].cgFloatValue() + leftEyeRightUpperCorner[0].cgFloatValue() + leftEyeLeftLowerCorner[0].cgFloatValue() + leftEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (leftEyeLeftUpperCorner[1].cgFloatValue() + leftEyeRightUpperCorner[1].cgFloatValue() + leftEyeLeftLowerCorner[1].cgFloatValue() + leftEyeRightLowerCorner[1].cgFloatValue())/4.0), right: (CGPoint(x: (rightEyeLeftUpperCorner[0].cgFloatValue() + rightEyeRightUpperCorner[0].cgFloatValue() + rightEyeLeftLowerCorner[0].cgFloatValue() + rightEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (rightEyeLeftUpperCorner[1].cgFloatValue() + rightEyeRightUpperCorner[1].cgFloatValue() + rightEyeLeftLowerCorner[1].cgFloatValue() + rightEyeRightLowerCorner[1].cgFloatValue())/4.0)))
+			let leftEyeCenter = CGPoint(x: (leftEyeLeftUpperCorner[0].cgFloatValue() + leftEyeRightUpperCorner[0].cgFloatValue() + leftEyeLeftLowerCorner[0].cgFloatValue() + leftEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (leftEyeLeftUpperCorner[1].cgFloatValue() + leftEyeRightUpperCorner[1].cgFloatValue() + leftEyeLeftLowerCorner[1].cgFloatValue() + leftEyeRightLowerCorner[1].cgFloatValue())/4.0)
+			
+			let rightEyeCenter = CGPoint(x: (rightEyeLeftUpperCorner[0].cgFloatValue() + rightEyeRightUpperCorner[0].cgFloatValue() + rightEyeLeftLowerCorner[0].cgFloatValue() + rightEyeRightLowerCorner[0].cgFloatValue())/4.0, y: (rightEyeLeftUpperCorner[1].cgFloatValue() + rightEyeRightUpperCorner[1].cgFloatValue() + rightEyeLeftLowerCorner[1].cgFloatValue() + rightEyeRightLowerCorner[1].cgFloatValue())/4.0)
+			
+			eyes.add(left: leftEyeCenter, right: rightEyeCenter)
 			// ---------------------------------
 			
-			if (currentExercise < 0)
+			if (currentExercise == 0 || currentExercise == 2)
 			{
-				let leftEyebrowInnerEdge = points[21] as! [NSNumber]
-				let rightEyebrowInnerEdge = points[22] as! [NSNumber]
-				let topNose = points[27] as! [NSNumber]
-				let leftOffset = abs(leftEyebrowInnerEdge[0].intValue - topNose[0].intValue)
-				let rightOffset = abs(rightEyebrowInnerEdge[0].intValue - topNose[0].intValue)
-				difference = abs(Double(leftOffset - rightOffset))
-			}
-			else if (currentExercise == 0)
-			{
+				let faceCenter = (leftEyeCenter.x + rightEyeCenter.x) / 2
 				let leftCorner = points[48] as! [NSNumber]
 				let rightCorner = points[54] as! [NSNumber]
-				let center = points[62] as! [NSNumber]
-				let leftOffset = abs(center[0].intValue - leftCorner[0].intValue)
-				let rightOffset = abs(center[0].intValue - rightCorner[0].intValue)
-				difference = abs(Double(leftOffset - rightOffset))
-				
+//				let center = points[62] as! [NSNumber]
+				let leftOffset = abs(Int(faceCenter) - leftCorner[0].intValue)
+				let rightOffset = abs(Int(faceCenter) - rightCorner[0].intValue)
+				exercise.add(left: CGPoint(x: leftOffset, y: 0), right: CGPoint(x: rightOffset, y: 0))
 			}
 			else if (currentExercise == 1)
 			{
@@ -297,20 +300,33 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 				
 				let rightEyeClosure = (abs(rightEyeLeftUpperCorner[1].doubleValue - rightEyeLeftLowerCorner[1].doubleValue) + abs(rightEyeRightUpperCorner[1].doubleValue - rightEyeRightLowerCorner[1].doubleValue)) / 2.0
 				
-				difference = abs(Double(leftEyeClosure - rightEyeClosure))
+				exercise.add(left: CGPoint(x: leftEyeClosure, y: 0), right: CGPoint(x: rightEyeClosure, y: 0))
 			}
+				/*
+			else if (currentExercise == 2)
+			{
+				let leftCorner = points[48] as! [NSNumber]
+				let rightCorner = points[54] as! [NSNumber]
+				let center = points[62] as! [NSNumber]
+				let leftOffset = abs(center[0].intValue - leftCorner[0].intValue)
+				let rightOffset = abs(center[0].intValue - rightCorner[0].intValue)
+				exercise.add(left: CGPoint(x: leftOffset, y: 0), right: CGPoint(x: rightOffset, y: 0))
+			}
+			*/
+			
+			
 			// Smiling
 			if (self.count < Double(self.frameCount))
 			{
-				self.dataPoints.append(difference)
-				self.sum += difference
+//				self.dataPoints.append(difference)
+//				self.sum += difference
 				self.count += 1
 			}
 			else
 			{
 				// filtering -----------
 				
-				
+				/*
 				for data in self.dataPoints
 				{
 					self.average += data
@@ -339,22 +355,51 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 				self.standardDeviation = 0
 				self.sum = 0
 				self.average = 0
+				*/
 				self.count = 0
 				
-				let reference = stabilizer.filter()
+				let reference = eyes.filter()
+				let result = exercise.filter()
+				print("\(result[0].x) \(result[1].x)")
+				if (currentExercise == 0)
+				{
+					if (performing || (result[0].x + result[1].x) / 2 > 130)
+					{
+						performing = true
+					}
+				}
+				else if (currentExercise == 1)
+				{
+					if (performing || (result[0].x + result[1].x) / 2 < 30)
+					{
+						performing = true
+					}
+				}
+				else if (currentExercise == 2)
+				{
+					if (performing || (result[0].x + result[1].x) / 2 < 30)
+					{
+						performing = true
+					}
+				}
+				
+				let filteredData = abs(result[0].x - result[1].x)
+//				print(filteredData)
 				
 				DispatchQueue.main.async
 				{
-					if (CGFloat(filteredData) > self.exercises[currentExercise].threshold * 0.2)
+					self.scoreLabel.text = "Score: \(self.score)"
+					if (CGFloat(filteredData) > self.exercise.threshold * 0.2 && self.timer != nil)
 					{
-						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercises[currentExercise].threshold))
+						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercise.threshold))
+						self.mistake = true
 					}
 					else
 					{
 						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0)
 					}
 					
-					if (abs(self.leftEyeReference.x - reference[0].x) < self.stabilizer.threshold && abs(self.leftEyeReference.y - reference[0].y) < self.stabilizer.threshold && abs(self.rightEyeReference.x - reference[1].x) < self.stabilizer.threshold && abs(self.rightEyeReference.y - reference[1].y) < self.stabilizer.threshold)
+					if (abs(self.leftEyeReference.x - reference[0].x) < self.eyes.threshold && abs(self.leftEyeReference.y - reference[0].y) < self.eyes.threshold && abs(self.rightEyeReference.x - reference[1].x) < self.eyes.threshold && abs(self.rightEyeReference.y - reference[1].y) < self.eyes.threshold)
 					{
 //						print("success")
 						self.guide.alpha = 0
@@ -378,8 +423,6 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 						}
 					}
 					
-					self.leftEdge.text = "x: \(reference[0].x)\ny\(reference[0].y)"
-					self.rightEdge.text = "x: \(reference[1].x)\ny\(reference[1].y)"
 					
 				}
 				// Smiling End
@@ -397,6 +440,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					self.countdown = 3
 					self.timerLabel.alpha = 0
 					self.buttonOutlet.alpha = 0
+					self.mistake = false
+					self.performing = false
 				}
 			}
 		}
@@ -436,6 +481,12 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			timer = nil
 			countdown = 3
 			timerLabel.alpha = 0
+			if (!mistake && performing)
+			{
+				score += 1
+			}
+			mistake = false
+			performing = false
 		}
 		else
 		{
@@ -475,16 +526,16 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	func fetch()
 	{
-		let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataPoint")
+		let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataPoint")
 		do {
-			let fetchedPerson = try moc.fetch(personFetch) as! [ExerciseDataPoint]
+			let fetchedData = try moc.fetch(fetch) as! [ExerciseDataPoint]
 			let formatter  = DateFormatter()
 			formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-			if fetchedPerson.count > 0
+			if fetchedData.count > 0
 			{
-				print(fetchedPerson.first!.name!)
-				print(fetchedPerson.first!.performance)
-				print(formatter.string(from: fetchedPerson.first?.date as! Date))
+				print(fetchedData.first!.name!)
+				print(fetchedData.first!.performance)
+				print(formatter.string(from: fetchedData.first?.date as! Date))
 			}
 		} catch {
 			fatalError("Failed to fetch person: \(error)")
