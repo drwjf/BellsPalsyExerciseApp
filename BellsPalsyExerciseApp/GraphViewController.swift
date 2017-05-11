@@ -8,6 +8,7 @@
 
 import UIKit
 import CorePlot
+import CoreData
 
 class GraphViewController: UIViewController
 {
@@ -21,7 +22,7 @@ class GraphViewController: UIViewController
     override func viewDidLoad()
 	{
         super.viewDidLoad()
-
+		fetch()
 		for i in 0..<5
 		{
 			var date = NSDateComponents()
@@ -181,6 +182,24 @@ class GraphViewController: UIViewController
         // Pass the selected object to the new view controller.
     }
     */
+	
+	func fetch()
+	{
+		let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataPoint")
+		do {
+			let fetchedPerson = try moc.fetch(personFetch) as! [ExerciseDataPoint]
+			let formatter  = DateFormatter()
+			formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+			if fetchedPerson.count > 0
+			{
+				print(fetchedPerson.first!.name!)
+				print(fetchedPerson.first!.performance)
+				print(formatter.string(from: fetchedPerson.first?.date as! Date))
+			}
+		} catch {
+			fatalError("Failed to fetch person: \(error)")
+		}
+	}
 
 }
 

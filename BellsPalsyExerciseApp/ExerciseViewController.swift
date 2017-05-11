@@ -10,8 +10,6 @@ import UIKit
 import AVFoundation
 import CoreData
 
-var currentExercise = 0
-
 class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate
 {
 	@IBOutlet weak var rightEdge: UILabel!
@@ -22,7 +20,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	@IBOutlet weak var buttonOutlet: UIButton!
 	@IBOutlet weak var navigationBar: UINavigationItem!
 	
-	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0)]
+	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0),Exercise(name:"KISSING",threshold: 5.0)]
 	var session = AVCaptureSession()
 	var output = AVCaptureVideoDataOutput()
 	let layer = AVSampleBufferDisplayLayer()
@@ -43,8 +41,6 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	let leftEyeReference = CGPoint(x: 225, y: 560)
 	let rightEyeReference = CGPoint(x: 535, y: 560)
-	
-	let moc = DataController(completionClosure: {}).managedObjectContext
 	
 	struct Stabilization
 	{
@@ -117,6 +113,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         super.viewDidLoad()
 		
 		navigationItem.title = exercises[currentExercise].name
+		self.buttonOutlet.alpha = 0
 
 		if let navController = self.navigationController
 		{
@@ -155,7 +152,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     override func viewDidAppear(_ animated: Bool)
 	{
 		super.viewDidAppear(animated)
-		addData()
+		fetch()
         openSession()
 		self.preview.layer.addSublayer(layer)
 	}
@@ -164,6 +161,12 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	{
 		super.viewDidLayoutSubviews()
 		updateVideoOrientation()
+	}
+	
+	override func viewWillDisappear(_ animated: Bool)
+	{
+		super.viewWillDisappear(animated)
+		session.stopRunning()
 	}
 	
 	func updateVideoOrientation () {
@@ -355,6 +358,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					{
 //						print("success")
 						self.guide.alpha = 0
+						self.buttonOutlet.alpha = 1
 						if (self.timer == nil && self.exercising)
 						{
 							self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
@@ -367,6 +371,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					else
 					{
 						self.guide.alpha = 1
+						self.buttonOutlet.alpha = 0
 						if (self.exercising)
 						{
 							self.buttonAction(self)
@@ -391,6 +396,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					self.timer = nil
 					self.countdown = 3
 					self.timerLabel.alpha = 0
+					self.buttonOutlet.alpha = 0
 				}
 			}
 		}
@@ -472,7 +478,14 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataPoint")
 		do {
 			let fetchedPerson = try moc.fetch(personFetch) as! [ExerciseDataPoint]
-			print(fetchedPerson.first!.name!)
+			let formatter  = DateFormatter()
+			formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+			if fetchedPerson.count > 0
+			{
+				print(fetchedPerson.first!.name!)
+				print(fetchedPerson.first!.performance)
+				print(formatter.string(from: fetchedPerson.first?.date as! Date))
+			}
 		} catch {
 			fatalError("Failed to fetch person: \(error)")
 		}

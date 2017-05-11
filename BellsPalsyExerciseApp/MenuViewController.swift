@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import CoreData
+
+var currentExercise = 0
+let moc = DataController(completionClosure: {}).managedObjectContext
 
 class MenuViewController: UITableViewController
 {
-	let exercises = ["Smiling","Blinking"]
+	let exercises = ["Smiling","Blinking","Kissing"]
 
 	@IBOutlet weak var navigationBar: UINavigationItem!
 	
