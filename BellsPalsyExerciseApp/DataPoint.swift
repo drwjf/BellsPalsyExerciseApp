@@ -12,9 +12,9 @@ class DataPoint: NSObject
 {
 	var name:String
 	var date:NSDateComponents
-	var performance:Float
+	var performance:CGFloat
 	
-	init(name: String, date: NSDateComponents, performance: Float)
+	init(name: String, date: NSDateComponents, performance: CGFloat)
 	{
 		self.name = name
 		self.date = date

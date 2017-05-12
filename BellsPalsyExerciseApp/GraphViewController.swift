@@ -16,8 +16,8 @@ class GraphViewController: UIViewController
 
 	var dummyData = [DataPoint]()
 	var plot: CPTBarPlot!
-	let BarWidth = 0.25
-	let BarInitialX = 0.25
+	let BarWidth = 0.5
+	let BarInitialX = 0.5
 	
     override func viewDidLoad()
 	{
@@ -29,7 +29,7 @@ class GraphViewController: UIViewController
 			date.day = i+13
 			date.month = 4
 			date.year = 2017
-			dummyData.append(DataPoint(name: "Smiling", date: date, performance: Float(arc4random()) / Float(UINT32_MAX)))
+			dummyData.append(DataPoint(name: "Smiling", date: date, performance: CGFloat(arc4random()) / CGFloat(UINT32_MAX)))
 		}
 		
 		navigationItem.title = "Smiling Exercise"
@@ -79,7 +79,7 @@ class GraphViewController: UIViewController
 		graph.paddingBottom = 30.0
 		graph.paddingLeft = 30.0
 		graph.paddingTop = 0.0
-		graph.paddingRight = 0.0
+		graph.paddingRight = 5.0
 		
 		// 3 - Set up styles
 		let titleStyle = CPTMutableTextStyle()
@@ -100,7 +100,7 @@ class GraphViewController: UIViewController
 		let yMin = 0.0
 		let yMax = 1.2
 		guard let plotSpace = graph.defaultPlotSpace as? CPTXYPlotSpace else { return }
-		plotSpace.xRange = CPTPlotRange(locationDecimal: CPTDecimalFromDouble(xMin), lengthDecimal: CPTDecimalFromDouble(xMax - xMin))
+		plotSpace.xRange = CPTPlotRange(locationDecimal: CPTDecimalFromDouble(xMin), lengthDecimal: CPTDecimalFromDouble(xMax - xMin + 1))
 		plotSpace.yRange = CPTPlotRange(locationDecimal: CPTDecimalFromDouble(yMin), lengthDecimal: CPTDecimalFromDouble(yMax - yMin))
 	}
 	
@@ -144,11 +144,12 @@ class GraphViewController: UIViewController
 			xAxis.axisLineStyle = axisLineStyle
 			var majorTickLocations = Set<NSNumber>()
 			var axisLabels = Set<CPTAxisLabel>()
-			for data in dummyData.enumerated()
+			for (idx,data) in dummyData.enumerated()
 			{
-				majorTickLocations.insert(NSNumber(value: data.element.date.day))
-				let label = CPTAxisLabel(text: "\(data.element.date.day)", textStyle: CPTTextStyle())
-				label.tickLocation = NSNumber(value: data.offset)
+				print(data.date.day)
+				majorTickLocations.insert(NSNumber(value: data.date.day))
+				let label = CPTAxisLabel(text: "\(data.date.month)/\(data.date.day)", textStyle: CPTTextStyle())
+				label.tickLocation = NSNumber(value: data.date.day)
 				label.offset = 5.0
 				label.alignment = .left
 				axisLabels.insert(label)
@@ -157,7 +158,9 @@ class GraphViewController: UIViewController
 			xAxis.axisLabels = axisLabels
 		}
 		// 4 - Configure the y-axis
-		if let yAxis = axisSet.yAxis {
+		if let yAxis = axisSet.yAxis
+		{
+			yAxis.title = "Score"
 			yAxis.labelingPolicy = .automatic
 			yAxis.labelOffset = -10.0
 			yAxis.minorTicksPerInterval = 4
@@ -200,7 +203,6 @@ class GraphViewController: UIViewController
 			fatalError("Failed to fetch person: \(error)")
 		}
 	}
-
 }
 
 extension GraphViewController: CPTBarPlotDataSource, CPTBarPlotDelegate

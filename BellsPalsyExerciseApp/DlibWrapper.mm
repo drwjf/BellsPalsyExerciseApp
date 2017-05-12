@@ -106,6 +106,7 @@
 			NSNumber *y = [[NSNumber alloc] initWithLong:p.y()];
 			NSArray *point = [[NSArray alloc] initWithObjects:x,y, nil];
 			[points addObject:point];
+			/*
 			if (k == 48 || k == 60)
 			{
 				draw_solid_circle(img, p, 3, dlib::rgb_pixel(255, 0, 0));
@@ -118,6 +119,7 @@
 			{
 				draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
 			}
+			 **/
         }
     }
     

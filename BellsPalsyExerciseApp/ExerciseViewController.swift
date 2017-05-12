@@ -21,7 +21,6 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 	
 	@IBOutlet weak var feedbackLabel: UILabel!
 	
-	var exercises = [Exercise(name:"SMILING",threshold: 50.0),Exercise(name:"BLINKING",threshold: 5.0),Exercise(name:"KISSING",threshold: 40.0)]
 	var session = AVCaptureSession()
 	var output = AVCaptureVideoDataOutput()
 	let layer = AVSampleBufferDisplayLayer()
@@ -140,7 +139,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		}
 		
 		scoreLabel.layer.zPosition = 2
-		transparentView.layer.zPosition = 1
+		transparentView.layer.zPosition = -1
 		guide.layer.zPosition = 2
 		timerLabel.layer.zPosition = 2
 		buttonOutlet.layer.zPosition = 2
@@ -148,6 +147,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		timerLabel.alpha = 0
 		scoreLabel.backgroundColor = UIColor.clear
 		transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.0)
+		self.feedbackLabel.alpha = 0
 //		transparentView.backgroundColor = UIColor.clear
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -245,6 +245,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		wrapper?.prepare()
 		
 		session.startRunning()
+		scoreLabel.alpha = 1
 	}
 	
 	// MARK: AVCaptureVideoDataOutputSampleBufferDelegate
@@ -325,42 +326,12 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			else
 			{
 				// filtering -----------
-				
-				/*
-				for data in self.dataPoints
-				{
-					self.average += data
-				}
-				self.average /= Double(self.dataPoints.count)
-				for data in self.dataPoints
-				{
-					self.standardDeviation += (data - self.average) * (data - self.average)
-				}
-				self.standardDeviation = sqrt(self.standardDeviation / Double(self.dataPoints.count))
-				
-				for index in 0...(self.frameCount-1)
-				{
-					if (abs(self.dataPoints[index]) > self.standardDeviation + abs(self.average))
-					{
-						self.sum -= self.dataPoints[index]
-						self.count -= 1
-					}
-				}
-				
-				let filteredData = self.sum / self.count
-				
-				// ---------------------
-				
-				self.dataPoints.removeAll()
-				self.standardDeviation = 0
-				self.sum = 0
-				self.average = 0
-				*/
+
 				self.count = 0
 				
 				let reference = eyes.filter()
 				let result = exercise.filter()
-				print("\(result[0].x) \(result[1].x)")
+				//				print("\(result[0].x) \(result[1].x)")
 				if (currentExercise == 0)
 				{
 					if (performing || (result[0].x + result[1].x) / 2 > 130)
@@ -377,9 +348,10 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 				}
 				else if (currentExercise == 2)
 				{
-					if (performing || (result[0].x + result[1].x) / 2 < 30)
+					if (performing || (result[0].x + result[1].x) / 2 < 100)
 					{
 						performing = true
+						print((result[0].x + result[1].x) / 2)
 					}
 				}
 				
@@ -393,6 +365,7 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					{
 						self.transparentView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: CGFloat(filteredData)/CGFloat(self.exercise.threshold))
 						self.mistake = true
+						print("mistake")
 					}
 					else
 					{
@@ -404,6 +377,11 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 //						print("success")
 						self.guide.alpha = 0
 						self.buttonOutlet.alpha = 1
+						if !self.exercising
+						{
+							self.feedbackLabel.text = "Press the button to start"
+						}
+						//						self.feedbackLabel.alpha = 0
 						if (self.timer == nil && self.exercising)
 						{
 							self.timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
@@ -417,6 +395,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 					{
 						self.guide.alpha = 1
 						self.buttonOutlet.alpha = 0
+						self.feedbackLabel.text = "Please match your eyes with the guide"
+						self.feedbackLabel.alpha = 1
 						if (self.exercising)
 						{
 							self.buttonAction(self)
@@ -433,6 +413,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 //			print("not valid")
 			DispatchQueue.main.async
 			{
+				self.feedbackLabel.text = "Please match your eyes with the guide"
+				self.feedbackLabel.alpha = 1
 				if (self.timer != nil)
 				{
 					self.timer?.invalidate()
@@ -484,6 +466,11 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 			if (!mistake && performing)
 			{
 				score += 1
+				self.feedbackLabel.text = "Good Job!"
+			}
+			else
+			{
+				self.feedbackLabel.text = "Try again!"
 			}
 			mistake = false
 			performing = false
@@ -504,6 +491,8 @@ class ExerciseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 		}
 		else
 		{
+			self.feedbackLabel.text = "Please match your eyes with the guide"
+			//			self.feedbackLabel.alpha = 0
 			buttonOutlet.setTitle("End", for: UIControlState.normal)
 			buttonOutlet.setTitleColor(UIColor.red, for: UIControlState.normal)
 		}

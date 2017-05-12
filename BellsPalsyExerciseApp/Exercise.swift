@@ -12,11 +12,13 @@ class Exercise: NSObject
 {
 	var name:String
 	var threshold:CGFloat
+	var workingMuscles:[String]
 
-	init(name: String, threshold: CGFloat)
+	init(name: String, threshold: CGFloat, muscles: [String])
 	{
 		self.name = name
 		self.threshold = threshold
+		self.workingMuscles = muscles
 	}
 	
 }

@@ -11,11 +11,10 @@ import CoreData
 
 var currentExercise = 0
 let moc = DataController(completionClosure: {}).managedObjectContext
+var exercises = [Exercise(name:"Smiling",threshold: 60.0,muscles: ["Zygomaticus Major","Zygomaticus  Minor"]),Exercise(name:"Blinking",threshold: 5.0,muscles: ["Orbicularis Oculi","Levator Palpebrae Superioris"]),Exercise(name:"Kissing",threshold: 50.0,muscles: ["Orbicularis Oris","Depressor Anguli Oris"])]
 
 class MenuViewController: UITableViewController
 {
-	let exercises = ["Smiling","Blinking","Kissing"]
-
 	@IBOutlet weak var navigationBar: UINavigationItem!
 	
     override func viewDidLoad() {
@@ -88,22 +87,22 @@ class MenuViewController: UITableViewController
 		if (indexPath.section == 0)
 		{
 			let cell = tableView.dequeueReusableCell(withIdentifier: "exerciseCell", for: indexPath) as! ExerciseTableViewCell
-			if let fileURL = Bundle.main.url(forResource: exercises[indexPath.row], withExtension: "png")
+			if let fileURL = Bundle.main.url(forResource: exercises[indexPath.row].name, withExtension: "png")
 			{
 				let data = NSData(contentsOf: fileURL)
 				cell.demo.image = UIImage(data: data! as Data)
 			}
-			cell.exerciseLabel.text = exercises[indexPath.row]
-			cell.explanationLabel.text = "This exercise will train the following muscles:\n- first\n- second\n- third"
+			cell.exerciseLabel.text = exercises[indexPath.row].name
+			cell.explanationLabel.text = "This exercise will train the following muscles:\n- \(exercises[indexPath.row].workingMuscles[0])\n- \(exercises[indexPath.row].workingMuscles[1])"
 			return cell
 		}
 		else
 		{
 			let cell = tableView.dequeueReusableCell(withIdentifier: "progressCell", for: indexPath) as! ProgressTableViewCell
-			cell.label.text = exercises[indexPath.row]
+			cell.label.text = exercises[indexPath.row].name
 			return cell
 		}
-    }
+	}
 	
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
 	{
