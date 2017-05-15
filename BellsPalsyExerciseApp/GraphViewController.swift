@@ -32,7 +32,7 @@ class GraphViewController: UIViewController
 			dummyData.append(DataPoint(name: "Smiling", date: date, performance: CGFloat(arc4random()) / CGFloat(UINT32_MAX)))
 		}
 		
-		navigationItem.title = "Smiling Exercise"
+		navigationItem.title = "\(exercises[currentExercise].name) Exercise"
         // Do any additional setup after loading the view.
     }
 
@@ -89,7 +89,7 @@ class GraphViewController: UIViewController
 		titleStyle.textAlignment = .center
 		graph.titleTextStyle = titleStyle
 		
-		let title = "Smiling Exercise Performance"
+		let title = "\(exercises[currentExercise].name) Exercise Performance"
 		graph.title = title
 		graph.titlePlotAreaFrameAnchor = .top
 		graph.titleDisplacement = CGPoint(x: 0.0, y: -16.0)
